@@ -1,4 +1,4 @@
-package ch.unige.kindle1;
+package ch.unige.kindle1.Twic;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;

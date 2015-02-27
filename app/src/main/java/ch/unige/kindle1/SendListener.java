@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import java.util.Map;
 
+import ch.unige.kindle1.Twic.TwicFields;
+import ch.unige.kindle1.Twic.TwicXmlParser;
+
 /**
  * Created by thomas on 2/27/15.
  */
