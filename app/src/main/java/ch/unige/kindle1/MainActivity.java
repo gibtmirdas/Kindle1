@@ -2,7 +2,6 @@ package ch.unige.kindle1;
 
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,10 +9,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.unige.kindle1.listeners.SendListener;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -24,6 +29,7 @@ public class MainActivity extends ActionBarActivity {
     private static Button sendButton;
     private static EditText inputField;
     private static TextView responseview;
+    private static Spinner spinSrc, spinDest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +94,19 @@ public class MainActivity extends ActionBarActivity {
                     inputField.setText("");
                 }
             });
+
+            spinSrc = (Spinner) rootView.findViewById(R.id.spinSrc);
+            spinDest = (Spinner) rootView.findViewById(R.id.spinSrc);
+            List<String> list = new ArrayList<String>();
+            list.add("list 1");
+            list.add("list 2");
+            list.add("list 3");
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(rootView.getContext(),
+                    android.R.layout.simple_spinner_item, list);
+            dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinSrc.setAdapter(dataAdapter);
+            spinDest.setAdapter(dataAdapter);
+
             return rootView;
         }
     }

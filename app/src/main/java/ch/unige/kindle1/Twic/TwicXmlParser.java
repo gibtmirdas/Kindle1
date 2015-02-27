@@ -24,15 +24,17 @@ public class TwicXmlParser implements TwicFields{
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(new InputSource(new ByteArrayInputStream(response.getBytes("utf-8"))));
 
-            NodeList nList = doc.getElementsByTagName("twicResponse");
-            Node nNode = nList.item(0);
-            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                Element eElement = (Element) nNode;
-                for(String nodeName: FIELDS){
-                    String[] toPut;
-                    NodeList element = eElement.getElementsByTagName(nodeName);
-                    responseMap.put(nodeName, getToPut(element));
-                }
+            String rootName = doc.getDocumentElement().getTagName();
+            Node nNode = doc.getElementsByTagName(rootName).item(0);
+            switch (rootName){
+                case "twicResponse":
+                    parseTwicResponse(nNode, responseMap);
+                    break;
+                case "languagelist":
+                    parseLanguagelist(nNode, responseMap);
+                    break;
+                default:
+                    break;
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -40,10 +42,23 @@ public class TwicXmlParser implements TwicFields{
         return responseMap;
     }
 
+    private static void parseTwicResponse(Node nNode, Map<String, String[]> responseMap){
+        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+            Element eElement = (Element) nNode;
+            for(String nodeName: FIELDS){
+                NodeList element = eElement.getElementsByTagName(nodeName);
+                responseMap.put(nodeName, getToPut(element));
+            }
+        }
+    }
+
+    private static void parseLanguagelist(Node nNode, Map<String, String[]> responseMap){
+
+    }
+
     private static String[] getToPut(NodeList element){
         if (element.getLength() == 0)
             return new String[0];
-
         String[] toPut;
         toPut = new String[element.getLength()];
         for(int i=0; i<element.getLength(); i++)

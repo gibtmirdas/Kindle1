@@ -6,42 +6,149 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity$PlaceholderFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Twic on Android"
-        android:id="@+id/textView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/inputSentenceField"
-        android:text="sentence to translate"
-        android:minWidth="400dp"
-        android:layout_below="@+id/textView"
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/langSrcView"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="38dp"
-        android:maxWidth="400dp" />
+        android:measureWithLargestChild="false"
+        android:layout_alignParentEnd="false">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="send"
-        android:id="@+id/sendButton"
-        android:layout_below="@+id/inputSentenceField"
-        android:layout_alignParentStart="true" />
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Response"
-        android:id="@+id/responseView"
-        android:minWidth="800dp"
-        android:maxWidth="800dp"
-        android:layout_below="@+id/sendButton"
-        android:layout_alignParentStart="true" />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/Title"
+                android:id="@+id/textView"
+                android:layout_column="0"
+                android:layout_span="4" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/inputSentenceField"
+                android:text="@string/sentence_default"
+                android:layout_marginTop="38dp"
+                android:layout_column="0"
+                android:layout_span="4"
+                android:inputType="text" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/viewLangSrc"
+                android:id="@+id/langSrcView"
+                android:layout_column="0" />
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/spinSrc"
+                android:layout_column="1"
+                android:spinnerMode="dropdown" />
+
+            <TextView
+                style="center"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/viewLangDest"
+                android:id="@+id/langDestView"
+                android:layout_column="2" />
+
+            <Spinner
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/spinDest"
+                android:layout_column="3"
+                android:spinnerMode="dropdown" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/wordPositionLabel"
+                android:id="@+id/wordPositionLabel"
+                android:layout_column="0" />
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/WordPositionSlider"
+                android:layout_column="1"
+                android:layout_span="2"
+                android:max="100"
+                android:progress="0"
+                android:indeterminate="false" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="@string/wordPositionView"
+                android:id="@+id/wordPositionView"
+                android:layout_column="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sendButton"
+                android:id="@+id/sendButton"
+                android:layout_column="0" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/scrollView"
+                android:layout_span="4">
+
+                <HorizontalScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/horizontalScrollView" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:text="@string/responseView"
+                        android:id="@+id/responseView"
+                        android:maxWidth="800dp"
+                        android:layout_marginBottom="113dp" />
+                </HorizontalScrollView>
+            </ScrollView>
+        </TableRow>
+    </TableLayout>
+
 </RelativeLayout>

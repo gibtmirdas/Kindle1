@@ -1,4 +1,4 @@
-package ch.unige.kindle1;
+package ch.unige.kindle1.listeners;
 
 import android.util.Log;
 import android.view.View;
@@ -9,6 +9,7 @@ import java.util.Map;
 
 import ch.unige.kindle1.Twic.TwicFields;
 import ch.unige.kindle1.Twic.TwicXmlParser;
+import ch.unige.kindle1.WebService;
 
 /**
  * Created by thomas on 2/27/15.
