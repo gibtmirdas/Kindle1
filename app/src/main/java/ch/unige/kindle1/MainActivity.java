@@ -4,6 +4,8 @@ import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -12,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,9 +32,11 @@ public class MainActivity extends ActionBarActivity {
      * Ui instances
      */
     private static Button sendButton;
-    private static EditText inputField;
+    private static EditTextCustom inputField;
     private static TextView responseView;
     private static Spinner spinSrc, spinDest;
+    private static SeekBar wordPositionSlider;
+    private static TextView wordPositionView;
     private static boolean startingFlag = true;
 
     @Override
@@ -88,19 +92,66 @@ public class MainActivity extends ActionBarActivity {
 
             sendButton = (Button) rootView.findViewById(R.id.sendButton);
             responseView = (TextView) rootView.findViewById(R.id.responseView);
-            inputField = (EditText) rootView.findViewById(R.id.inputSentenceField);
-
+            inputField = (EditTextCustom) rootView.findViewById(R.id.inputSentenceField);
 
             sendButton.setOnClickListener(new SendListener(sendButton, responseView));
-            inputField.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    inputField.setText("");
-                }
-            });
+//            inputField.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    inputField.setText("");
+//                }
+//            });
 
             spinSrc = (Spinner) rootView.findViewById(R.id.spinSrc);
             spinDest = (Spinner) rootView.findViewById(R.id.spinDest);
+
+            wordPositionSlider = (SeekBar) rootView.findViewById(R.id.wordPositionSlider);
+            wordPositionView = (TextView) rootView.findViewById(R.id.wordPositionView);
+
+            // Word position logic
+            wordPositionSlider.setMax(inputField.length());
+            inputField.setWordPositionSlider(wordPositionSlider);
+            wordPositionSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    inputField.setSelection(progress, inputField.getSelectionEnd());
+                    inputField.setCursorVisible(true);
+                    wordPositionView.setText(""+progress);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            inputField.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    int currentPosition = inputField.getSelectionStart();
+//                    if(wordPositionSlider.getProgress() > s.length())
+//                        wordPositionSlider.setProgress(s.length());
+                    wordPositionSlider.setMax(s.length());
+                    inputField.setSelection(currentPosition);
+                    wordPositionSlider.setProgress(inputField.getSelectionStart());
+                }
+            });
+
+            // Load only once language pairs and codeNames
             if(startingFlag){
                 initSpinners(rootView);
                 startingFlag = false;
@@ -135,6 +186,10 @@ public class MainActivity extends ActionBarActivity {
                     android.R.layout.simple_spinner_item, list);
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(dataAdapter);
+        }
+
+        private void initSlider(){
+
         }
     }
 }
