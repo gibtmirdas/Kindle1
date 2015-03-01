@@ -95,12 +95,6 @@ public class MainActivity extends ActionBarActivity {
             inputField = (EditTextCustom) rootView.findViewById(R.id.inputSentenceField);
 
             sendButton.setOnClickListener(new SendListener(sendButton, responseView));
-//            inputField.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    inputField.setText("");
-//                }
-//            });
 
             spinSrc = (Spinner) rootView.findViewById(R.id.spinSrc);
             spinDest = (Spinner) rootView.findViewById(R.id.spinDest);
