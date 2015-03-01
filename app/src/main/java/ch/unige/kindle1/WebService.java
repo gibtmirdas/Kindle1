@@ -23,16 +23,16 @@ public class WebService {
             connection = (HttpURLConnection) url.openConnection();
 
             InputStream stream = connection.getInputStream();
-            InputStreamReader isReader = new InputStreamReader(stream );
+            InputStreamReader isReader = new InputStreamReader(stream);
 
             //put output stream into a string
-            BufferedReader br = new BufferedReader(isReader );
+            BufferedReader br = new BufferedReader(isReader);
 
-            String result="";
+            String result = "";
             String line;
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
-                result+= line;
+                result += line;
             }
             response = result;
             br.close();
@@ -43,6 +43,35 @@ public class WebService {
     }
 
     public String getResponse() {
+        return response;
+    }
+
+    public static String callUrl(String path) {
+        HttpURLConnection connection;
+        String response = "";
+        try {
+            URI uri = new URI(path);
+            URL url = new URL(uri.toURL().toString());
+            connection = (HttpURLConnection) url.openConnection();
+
+            InputStream stream = connection.getInputStream();
+            InputStreamReader isReader = new InputStreamReader(stream);
+
+            //put output stream into a string
+            BufferedReader br = new BufferedReader(isReader);
+
+            String result = "";
+            String line;
+            while ((line = br.readLine()) != null) {
+                System.out.println(line);
+                result += line;
+            }
+            response = result;
+            br.close();
+            connection.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return response;
     }
 }

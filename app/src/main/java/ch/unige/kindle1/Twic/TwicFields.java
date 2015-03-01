@@ -13,4 +13,6 @@ public interface TwicFields {
             "collocationTarget",
             "translation"
     };
+
+    String LANGUAGELISTURL = "http://latlapps.unige.ch/Twicff?act=ll";
 }

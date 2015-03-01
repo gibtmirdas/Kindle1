@@ -9,15 +9,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import ch.unige.kindle1.Twic.PairsList;
+import ch.unige.kindle1.Twic.TwicFields;
+import ch.unige.kindle1.Twic.TwicXmlParser;
 import ch.unige.kindle1.listeners.SendListener;
 
 
@@ -28,8 +31,9 @@ public class MainActivity extends ActionBarActivity {
      */
     private static Button sendButton;
     private static EditText inputField;
-    private static TextView responseview;
+    private static TextView responseView;
     private static Spinner spinSrc, spinDest;
+    private static boolean startingFlag = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +87,11 @@ public class MainActivity extends ActionBarActivity {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             sendButton = (Button) rootView.findViewById(R.id.sendButton);
-            responseview = (TextView) rootView.findViewById(R.id.responseView);
+            responseView = (TextView) rootView.findViewById(R.id.responseView);
             inputField = (EditText) rootView.findViewById(R.id.inputSentenceField);
 
 
-            sendButton.setOnClickListener(new SendListener(sendButton, responseview));
+            sendButton.setOnClickListener(new SendListener(sendButton, responseView));
             inputField.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -96,18 +100,41 @@ public class MainActivity extends ActionBarActivity {
             });
 
             spinSrc = (Spinner) rootView.findViewById(R.id.spinSrc);
-            spinDest = (Spinner) rootView.findViewById(R.id.spinSrc);
-            List<String> list = new ArrayList<String>();
-            list.add("list 1");
-            list.add("list 2");
-            list.add("list 3");
-            ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(rootView.getContext(),
+            spinDest = (Spinner) rootView.findViewById(R.id.spinDest);
+            if(startingFlag){
+                initSpinners(rootView);
+                startingFlag = false;
+            }
+            return rootView;
+        }
+
+        private void initSpinners(final View rootView){
+            TwicXmlParser.parseLanguagelist(WebService.callUrl(TwicFields.LANGUAGELISTURL));
+            List<String> initList = PairsList.getSrcList(true);
+            fillSpinner(rootView, spinSrc, initList);
+            fillSpinner(rootView, spinDest, PairsList.getTgtFromSrc(initList.get(0), true));
+
+            spinSrc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(rootView.getContext(),
+                            android.R.layout.simple_spinner_item, PairsList.getTgtBySrcId(position));
+                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinDest.setAdapter(dataAdapter);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+
+        }
+
+        private void fillSpinner(View rootView, Spinner spinner, List<String> list){
+            ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(rootView.getContext(),
                     android.R.layout.simple_spinner_item, list);
             dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            spinSrc.setAdapter(dataAdapter);
-            spinDest.setAdapter(dataAdapter);
-
-            return rootView;
+            spinner.setAdapter(dataAdapter);
         }
     }
 }

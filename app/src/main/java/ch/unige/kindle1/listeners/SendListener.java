@@ -31,7 +31,7 @@ public class SendListener implements View.OnClickListener, TwicFields {
 
         String response = webService.getResponse();
         sendButton.setEnabled(true);
-        Map<String, String[]> parseData = TwicXmlParser.parseData(response);
+        Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
         responseView.setText(formatResponse(parseData));
     }
 
