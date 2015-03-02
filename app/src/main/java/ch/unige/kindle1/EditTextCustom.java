@@ -10,20 +10,16 @@ import android.widget.SeekBar;
  */
 public class EditTextCustom extends EditText {
     private SeekBar wordPositionSlider;
-    public EditTextCustom(Context context, AttributeSet attrs,
-                          int defStyle) {
+    public EditTextCustom(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
     }
 
     public EditTextCustom(Context context, AttributeSet attrs) {
         super(context, attrs);
-
     }
 
     public EditTextCustom(Context context) {
         super(context);
-
     }
 
     public void setWordPositionSlider(SeekBar wordPositionSlider){
@@ -33,6 +29,6 @@ public class EditTextCustom extends EditText {
     @Override
     protected void onSelectionChanged(int selStart, int selEnd) {
         if(wordPositionSlider != null)
-        wordPositionSlider.setProgress(selStart);
+            wordPositionSlider.setProgress(selStart);
     }
 }
