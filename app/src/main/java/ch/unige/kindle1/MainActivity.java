@@ -94,7 +94,7 @@ public class MainActivity extends ActionBarActivity {
             responseView = (TextView) rootView.findViewById(R.id.responseView);
             inputField = (EditTextCustom) rootView.findViewById(R.id.inputSentenceField);
 
-            sendButton.setOnClickListener(new SendListener(sendButton, responseView));
+            sendButton.setOnClickListener(new SendListener(rootView));
 
             spinSrc = (Spinner) rootView.findViewById(R.id.spinSrc);
             spinDest = (Spinner) rootView.findViewById(R.id.spinDest);
@@ -182,8 +182,5 @@ public class MainActivity extends ActionBarActivity {
             spinner.setAdapter(dataAdapter);
         }
 
-        private void initSlider(){
-
-        }
     }
 }
