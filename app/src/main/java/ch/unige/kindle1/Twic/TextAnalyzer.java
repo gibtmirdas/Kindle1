@@ -31,6 +31,8 @@ public class TextAnalyzer {
     private static TextAnalysis splitText(TextAnalysis analysis) {
         String text = analysis.getText();
         int offset = analysis.getOffset();
+        if (offset == text.length())
+            offset--;
         String left = "";
         boolean dotFounded = false;
         int newOffset = -1;
