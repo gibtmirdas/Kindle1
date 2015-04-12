@@ -1,6 +1,4 @@
-package ch.unige.kindle1.Twic;
-
-import android.util.Log;
+package ch.unige.Twic.Twic;
 
 /**
  * Created by Dwii on 02.03.15.

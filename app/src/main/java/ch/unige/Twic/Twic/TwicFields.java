@@ -1,4 +1,4 @@
-package ch.unige.kindle1.Twic;
+package ch.unige.Twic.Twic;
 
 /**
  * Created by thomas on 2/27/15.
@@ -14,5 +14,7 @@ public interface TwicFields {
             "translation"
     };
 
-    String LANGUAGELISTURL = "http://latlapps.unige.ch/Twicff?act=ll";
+    String SERVERURL = "http://latlapps.unige.ch";
+    String LANGUAGELISTURL = SERVERURL + "/Twicff?act=ll";
+    String TWICURL = SERVERURL + "/Twicff?act=twic";
 }

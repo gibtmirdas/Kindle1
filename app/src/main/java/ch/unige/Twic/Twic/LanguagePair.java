@@ -1,4 +1,4 @@
-package ch.unige.kindle1.Twic;
+package ch.unige.Twic.Twic;
 
 /**
  * Created by thomas on 3/1/15.

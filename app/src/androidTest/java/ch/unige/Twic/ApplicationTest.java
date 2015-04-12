@@ -1,4 +1,4 @@
-package ch.unige.kindle1;
+package ch.unige.Twic;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

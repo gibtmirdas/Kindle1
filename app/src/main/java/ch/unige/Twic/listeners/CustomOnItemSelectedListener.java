@@ -1,10 +1,8 @@
-package ch.unige.kindle1.listeners;
+package ch.unige.Twic.listeners;
 
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 public class CustomOnItemSelectedListener implements OnItemSelectedListener {
 

@@ -1,4 +1,4 @@
-package ch.unige.kindle1.Twic;
+package ch.unige.Twic.Twic;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,5 +24,9 @@ public class CodeNamesMap {
                 return c.getCode();
         }
         return "fr";
+    }
+
+    public static int getCodeNameLength() {
+        return codeNames.size();
     }
 }

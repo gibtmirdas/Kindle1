@@ -1,24 +1,20 @@
-package ch.unige.kindle1.listeners;
+package ch.unige.Twic.listeners;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import ch.unige.kindle1.EditTextCustom;
-import ch.unige.kindle1.R;
-import ch.unige.kindle1.Twic.TextAnalysis;
-import ch.unige.kindle1.Twic.TwicFields;
-import ch.unige.kindle1.Twic.TwicUrlBuilder;
-import ch.unige.kindle1.Twic.TwicXmlParser;
-import ch.unige.kindle1.WebService;
-import ch.unige.kindle1.Twic.TextAnalyzer;
+import ch.unige.Twic.EditTextCustom;
+import ch.unige.Twic.R;
+import ch.unige.Twic.Twic.Exceptions.TwicException;
+import ch.unige.Twic.Twic.TwicFields;
+import ch.unige.Twic.Twic.TwicUrlBuilder;
+import ch.unige.Twic.Twic.TwicXmlParser;
+import ch.unige.Twic.WebService;
 
 /**
  * Created by thomas on 2/27/15.
@@ -26,10 +22,11 @@ import ch.unige.kindle1.Twic.TextAnalyzer;
 public class SendListener implements View.OnClickListener, TwicFields {
     private TwicUrlBuilder urlBuilder;
     private Button sendButton;
-    private TextView responseView;
+    private TextView responseView, flashView;
 
     public SendListener(View rootView) {
         this.sendButton = (Button) rootView.findViewById(R.id.sendButton);
+        this.flashView = (TextView) rootView.findViewById(R.id.flashView);
         this.responseView = (TextView) rootView.findViewById(R.id.responseView);
         urlBuilder = new TwicUrlBuilder((EditTextCustom) rootView.findViewById(R.id.inputSentenceField),(Spinner)rootView.findViewById(R.id.spinSrc),(Spinner)rootView.findViewById(R.id.spinDest),(SeekBar)rootView.findViewById(R.id.wordPositionSlider));
     }
@@ -39,11 +36,16 @@ public class SendListener implements View.OnClickListener, TwicFields {
         sendButton.setEnabled(false);
         //String sentence = ((EditText)v.findViewById(R.id.inputSentenceField)).getText().toString();
         String path = urlBuilder.getRequestUrl();
-        String response = WebService.callUrl(path);
+        String response = null;
+        try {
+            response = WebService.callUrl(path);
+            Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
+            responseView.setText(formatResponse(parseData));
+            flashView.setText("");
+        } catch (TwicException e) {
+            flashView.setText(R.string.serverError);
+        }
         sendButton.setEnabled(true);
-        Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
-        responseView.setText(formatResponse(parseData));
-
     }
 
 

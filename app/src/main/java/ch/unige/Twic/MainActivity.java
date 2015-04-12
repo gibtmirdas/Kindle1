@@ -1,14 +1,13 @@
-package ch.unige.kindle1;
+package ch.unige.Twic;
 
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,13 +20,15 @@ import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import ch.unige.kindle1.Twic.PairsList;
-import ch.unige.kindle1.Twic.TwicFields;
-import ch.unige.kindle1.Twic.TwicXmlParser;
-import ch.unige.kindle1.listeners.SendListener;
+import ch.unige.Twic.Twic.Exceptions.TwicException;
+import ch.unige.Twic.Twic.PairsList;
+import ch.unige.Twic.Twic.TwicFields;
+import ch.unige.Twic.Twic.TwicXmlParser;
+import ch.unige.Twic.listeners.SendListener;
+import ch.unige.Twic.listeners.WifiState;
+import ch.unige.Twic.listeners.WifiStateObserver;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -36,12 +37,13 @@ public class MainActivity extends ActionBarActivity {
      * Ui instances
      */
     private static Button sendButton;
+    private static TextView flashView;
     private static EditTextCustom inputField;
     private static TextView responseView;
     private static Spinner spinSrc, spinDest;
     private static SeekBar wordPositionSlider;
     private static TextView wordPositionView;
-    private static boolean startingFlag = true;
+    private static Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,47 +58,7 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new PlaceholderFragment())
                     .commit();
         }
-
-
-        // Get intent, action and MIME type
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
-
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if ("text/plain".equals(type)) {
-                handleSendText(intent); // Handle text being sent
-            } else if (type.startsWith("image/")) {
-                handleSendImage(intent); // Handle single image being sent
-            }
-        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-            if (type.startsWith("image/")) {
-                handleSendMultipleImages(intent); // Handle multiple images being sent
-            }
-        } else {
-            // Handle other intents, such as being started from the home screen
-        }
-
-    }
-
-    void handleSendText(Intent intent) {
-        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-        if (sharedText != null) {
-        }
-    }
-
-    void handleSendImage(Intent intent) {
-        Uri imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUri != null) {
-            // Update UI to reflect image being shared
-        }
-    }
-
-    void handleSendMultipleImages(Intent intent) {
-        ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        if (imageUris != null) {
-            // Update UI to reflect multiple images being shared
-        }
+        intent = getIntent();
     }
 
     @Override
@@ -124,21 +86,46 @@ public class MainActivity extends ActionBarActivity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class PlaceholderFragment extends Fragment implements WifiStateObserver {
+        WifiState wifiState;
+        View rootView = null;
+        @Override
+        public void update(WifiState observable, Boolean isOnline) {
+            foobar(isOnline);
+        }
+
+        void foobar(Boolean isOnline) {
+            if(rootView != null && isOnline) {
+                flashView.setText("");
+                initSpinners(rootView);
+                sendButton.setEnabled(true);
+            } else {
+                flashView.setText(R.string.connexionError);
+                sendButton.setEnabled(false);
+            }
+        }
+
+        public Context getContext() {
+            return rootView.getContext();
+        }
 
         public PlaceholderFragment() {
+            wifiState = WifiState.getWifiState();
+            wifiState.addObserver(this);
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             sendButton = (Button) rootView.findViewById(R.id.sendButton);
             responseView = (TextView) rootView.findViewById(R.id.responseView);
             inputField = (EditTextCustom) rootView.findViewById(R.id.inputSentenceField);
 
             sendButton.setOnClickListener(new SendListener(rootView));
+
+            flashView = (TextView) rootView.findViewById(R.id.flashView);
 
             spinSrc = (Spinner) rootView.findViewById(R.id.spinSrc);
             spinDest = (Spinner) rootView.findViewById(R.id.spinDest);
@@ -158,14 +145,10 @@ public class MainActivity extends ActionBarActivity {
                 }
 
                 @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
+                public void onStartTrackingTouch(SeekBar seekBar) { }
 
                 @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
+                public void onStopTrackingTouch(SeekBar seekBar) { }
             });
             inputField.addTextChangedListener(new TextWatcher() {
                 @Override
@@ -181,27 +164,38 @@ public class MainActivity extends ActionBarActivity {
                 @Override
                 public void afterTextChanged(Editable s) {
                     int currentPosition = inputField.getSelectionStart();
-//                    if(wordPositionSlider.getProgress() > s.length())
-//                        wordPositionSlider.setProgress(s.length());
                     wordPositionSlider.setMax(s.length());
                     inputField.setSelection(currentPosition);
                     wordPositionSlider.setProgress(inputField.getSelectionStart());
                 }
             });
 
-            // Load only once language pairs and codeNames
-            if(startingFlag){
-                initSpinners(rootView);
-                startingFlag = false;
-            }
+            // Load language pairs and codeNames
+            foobar(wifiState.isOnline(rootView.getContext()));
+
+            // Get intent, action and MIME type
+            String action = intent.getAction();
+            String type = intent.getType();
+
+            if (type != null)
+                if (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type)) {
+                    handleSendText(intent);
+                } else {
+                    flashView.setText(R.string.shareError);
+                }
+
             return rootView;
         }
 
         private void initSpinners(final View rootView){
-            TwicXmlParser.parseLanguagelist(WebService.callUrl(TwicFields.LANGUAGELISTURL));
-            List<String> initList = PairsList.getSrcList(true);
-            fillSpinner(rootView, spinSrc, initList);
-            fillSpinner(rootView, spinDest, PairsList.getTgtFromSrc(initList.get(0), true));
+            try {
+                TwicXmlParser.parseLanguagelist(WebService.callUrl(TwicFields.LANGUAGELISTURL));
+                List<String> initList = PairsList.getSrcList(true);
+                fillSpinner(rootView, spinSrc, initList);
+                fillSpinner(rootView, spinDest, PairsList.getTgtFromSrc(initList.get(0), true));
+            } catch (TwicException e) {
+                flashView.setText(R.string.serverError);
+            }
 
             spinSrc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
@@ -213,10 +207,18 @@ public class MainActivity extends ActionBarActivity {
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                }
+                public void onNothingSelected(AdapterView<?> parent) { }
             });
 
+        }
+
+        void handleSendText(Intent intent) {
+            String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+            if (sharedText != null) {
+                if (sharedText.charAt(0) == '"')
+                    sharedText = sharedText.substring(1, sharedText.lastIndexOf('"'));
+                inputField.setText(sharedText);
+            }
         }
 
         private void fillSpinner(View rootView, Spinner spinner, List<String> list){
@@ -226,5 +228,7 @@ public class MainActivity extends ActionBarActivity {
             spinner.setAdapter(dataAdapter);
         }
 
+
     }
 }
+

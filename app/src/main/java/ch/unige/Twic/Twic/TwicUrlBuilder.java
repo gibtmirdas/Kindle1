@@ -1,21 +1,17 @@
-package ch.unige.kindle1.Twic;
+package ch.unige.Twic.Twic;
 
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import java.io.UnsupportedEncodingException;
 
-import ch.unige.kindle1.EditTextCustom;
+import ch.unige.Twic.EditTextCustom;
 
 /**
  * Created by thomas on 2/27/15.
  */
-public class TwicUrlBuilder {
+public class TwicUrlBuilder implements TwicFields{
 
-    private String baseUrl = "http://latlapps.unige.ch/Twicff?act=twic";
     private String srclg = "de";
     private String tgtlg = "fr";
     private String path = "";//baseUrl + "&pos=" + a.getOffset() + "&srclg=" + srclg + "&tgtlg=" + tgtlg + "&text=" + encodedText;
@@ -38,11 +34,13 @@ public class TwicUrlBuilder {
         try {
             encodedText = java.net.URLEncoder.encode(a.getText(), "UTF-8");
         } catch (UnsupportedEncodingException e) { }
-        String baseUrl = "http://latlapps.unige.ch/Twicff?act=twic";
-        String srclg = CodeNamesMap.getCodeFromName(spinSrc.getSelectedItem().toString());
-        String tgtlg = CodeNamesMap.getCodeFromName(spinDest.getSelectedItem().toString());
-        String path = baseUrl + "&pos=" + a.getOffset() + "&srclg=" + srclg + "&tgtlg=" + tgtlg + "&text=" + encodedText;
 
+        String path = TWICURL;
+        if (CodeNamesMap.getCodeNameLength() > 0) {
+            String srclg = CodeNamesMap.getCodeFromName(spinSrc.getSelectedItem().toString());
+            String tgtlg = CodeNamesMap.getCodeFromName(spinDest.getSelectedItem().toString());
+            path += "&pos=" + a.getOffset() + "&srclg=" + srclg + "&tgtlg=" + tgtlg + "&text=" + encodedText;
+        }
         return path;
     }
 

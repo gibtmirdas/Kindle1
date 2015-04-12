@@ -1,9 +1,7 @@
-package ch.unige.kindle1.Twic;
+package ch.unige.Twic.Twic;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by thomas on 3/1/15.

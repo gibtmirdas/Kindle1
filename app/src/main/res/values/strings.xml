@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Kindle1</string>
+    <string name="app_name">Twic</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="sentence_default">sentence to translate</string>
@@ -10,4 +10,7 @@
     <string name="responseView">Response</string>
     <string name="wordPositionLabel">Word start position</string>
     <string name="wordPositionView">0</string>
+    <string name="connexionError">Connexion error: Please enable your Wifi connexion</string>
+    <string name="serverError">Server error: Unable to reach Twic server</string>
+    <string name="shareError">Share Error: unable to process data</string>
 </resources>
