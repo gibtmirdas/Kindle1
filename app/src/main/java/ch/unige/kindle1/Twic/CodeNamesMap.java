@@ -17,4 +17,12 @@ public class CodeNamesMap {
     public static String getNameFromCode(String code){
         return codeNames.get(code).getName();
     }
+
+    public static String getCodeFromName(String name){
+        for(CodeName c:codeNames.values()){
+            if(c.getName().equals(name))
+                return c.getCode();
+        }
+        return "fr";
+    }
 }
