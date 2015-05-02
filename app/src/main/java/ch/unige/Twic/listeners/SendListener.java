@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.util.Map;
 
 import ch.unige.Twic.EditTextCustom;
+import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
 import ch.unige.Twic.Twic.TwicFields;
@@ -24,7 +25,7 @@ public class SendListener implements View.OnClickListener, TwicFields {
     private Button sendButton;
     private TextView responseView, flashView;
 
-    public SendListener(View rootView) {
+    public SendListener(MainActivity rootView) {
         this.sendButton = (Button) rootView.findViewById(R.id.sendButton);
         this.flashView = (TextView) rootView.findViewById(R.id.flashView);
         this.responseView = (TextView) rootView.findViewById(R.id.responseView);
