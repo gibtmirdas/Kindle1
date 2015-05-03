@@ -1,211 +1,218 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity$PlaceholderFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
-    <ScrollView
+    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/GridLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scrollViewMain"
-        android:layout_span="4">
+        android:columnCount="10"
+        android:orientation="horizontal"
+        android:rowCount="8"
+        tools:context=".GridXMLActivity">
 
-    <TableLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_alignParentStart="true"
-        android:measureWithLargestChild="false"
-        android:layout_alignParentEnd="false">
+        <Space
+            android:layout_width="@dimen/margin"
+            android:layout_height="@dimen/margin"
+            android:layout_column="0"
+            android:layout_columnSpan="1"
+            android:layout_row="0"
+            android:layout_rowSpan="1" />
 
-        <TableRow
+        <TextView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" >
+            android:layout_height="fill_parent"
+            android:layout_column="1"
+            android:layout_columnSpan="9"
+            android:layout_row="0"
+            android:layout_rowSpan="1"
+            android:textColor="#ffff0017"
+            android:id="@+id/flashView"/>
 
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="@string/Title"
-                android:id="@+id/textView"
-                android:layout_column="0"
-                android:layout_span="4" />
-        </TableRow>
 
-        <TableRow
+        <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:id="@+id/flashView"
-                android:layout_column="0"
-                android:layout_span="4"
-                android:textColor="#ffff0017" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:layout_column="1"
+            android:layout_columnSpan="5"
+            android:layout_row="1"
+            android:layout_rowSpan="2"
+            android:orientation="horizontal">
 
             <ch.unige.Twic.EditTextCustom
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/inputSentenceField"
-                android:text="@string/sentence_default"
-                android:layout_marginTop="38dp"
-                android:layout_column="0"
-                android:layout_span="4"
-                android:inputType="text" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/viewLangSrc"
-                android:id="@+id/langSrcView"
-                android:layout_column="0" />
-
-            <Spinner
-                android:layout_width="fill_parent"
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                android:id="@+id/spinSrc"
-                android:layout_column="1"
-                android:spinnerMode="dropdown" />
+                android:layout_gravity="bottom"
+                android:background="@drawable/border"
+                android:gravity="top|left"
+                android:inputType="textMultiLine"
+                android:lines="8"
+                android:maxLines="10"
+                android:minLines="6"
+                android:scrollbars="vertical"
+                android:text="@string/initTxt" />
+        </LinearLayout>
 
-            <TextView
-                style="center"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/viewLangDest"
-                android:id="@+id/langDestView"
-                android:layout_column="2" />
+        <Space
+            android:layout_width="@dimen/margin_small"
+            android:layout_height="@dimen/margin_small"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            android:layout_row="6"
+            android:layout_rowSpan="1" />
 
-            <Spinner
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/spinDest"
-                android:layout_column="3"
-                android:spinnerMode="dropdown" />
+        <Button
+            android:id="@+id/buttonPrev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_columnSpan="1"
+            android:layout_gravity="left|top"
+            android:layout_row="7"
+            android:layout_rowSpan="1"
+            android:text="@string/buttonPrev" />
 
-        </TableRow>
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_column="5"
+            android:layout_columnSpan="1"
+            android:layout_gravity="right|top"
+            android:layout_row="7"
+            android:layout_rowSpan="1"
+            android:text="@string/buttonNext" />
 
-        <TableRow
+        <Space
+            android:layout_width="@dimen/margin"
+            android:layout_height="@dimen/margin"
+            android:layout_column="6"
+            android:layout_columnSpan="1"
+            android:layout_row="0"
+            android:layout_rowSpan="1" />
+
+        <TableLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_height="fill_parent"
+            android:layout_column="7"
+            android:layout_columnSpan="3"
+            android:layout_row="1"
+            android:layout_rowSpan="3"
+            android:background="@drawable/border">
 
-            <TextView
+            <TableRow
                 android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/wordPositionLabel"
-                android:id="@+id/wordPositionLabel"
-                android:layout_column="0" />
+                android:layout_height="fill_parent">
 
-            <SeekBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/wordPositionSlider"
-                android:layout_column="1"
-                android:layout_span="2"
-                android:max="100"
-                android:progress="0"
-                android:indeterminate="false" />
-
-            <TextView
-                android:layout_width="fill_parent"
-                android:layout_height="match_parent"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/wordPositionView"
-                android:id="@+id/wordPositionView"
-                android:layout_column="0" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/sendButton"
-                android:id="@+id/sendButton"
-                android:layout_column="0" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-
-            <ScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/scrollView"
-                android:layout_span="4">
-
-                <HorizontalScrollView
+                <TextView
+                    android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/horizontalScrollView" >
+                    android:layout_column="0"
+                    android:layout_span="1"
+                    android:text="@string/viewLangSrc"
+                    android:textSize="20sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="@string/responseView"
-                        android:id="@+id/responseView"
-                        android:maxWidth="800dp"
-                        android:layout_marginBottom="113dp" />
-                </HorizontalScrollView>
-            </ScrollView>
-        </TableRow>
-        <TableRow
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+                <Spinner
+                    android:id="@+id/spinnerSrc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:spinnerMode="dropdown" />
 
-            <android.support.v4.app.FragmentTabHost
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@android:id/tabhost"
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <Space
+                    android:layout_height="@dimen/margin"
+                    android:layout_column="1" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="0"
+                    android:layout_span="1"
+                    android:text="@string/viewLangDst"
+                    android:textSize="20sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerDst"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_column="1"
+                    android:layout_span="2"
+                    android:spinnerMode="dropdown"
+                    />
+
+            </TableRow>
+            <TableRow>
+                <Space
+                    android:layout_height="@dimen/margin"
+                    android:layout_column="1" />
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/buttonSend"
+                    android:layout_column="0"
+                    android:layout_span="3"
+                    android:layout_gravity="center|top"
+                    android:text="@string/translate" />
+            </TableRow>
+        </TableLayout>
+    </GridLayout>
+
+
+    <Space
+        android:layout_width="@dimen/margin_big"
+        android:layout_height="@dimen/margin_big"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v4.app.FragmentTabHost
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@android:id/tabhost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_span="4">
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_span="4">
+                android:layout_height="match_parent">
 
-                <LinearLayout
-                    android:orientation="vertical"
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"/>
 
-                    <TabWidget
-                        android:id="@android:id/tabs"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"/>
+                <FrameLayout
+                    android:id="@android:id/tabcontent"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="0"/>
 
-                    <FrameLayout
-                        android:id="@android:id/tabcontent"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="0"/>
-
-                    <FrameLayout
-                        android:id="@+id/realtabcontent"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-
-                </LinearLayout>
-            </android.support.v4.app.FragmentTabHost>
-        </TableRow>
-    </TableLayout>
-</ScrollView>
-</RelativeLayout>
+                <FrameLayout
+                    android:id="@+id/realtabcontent"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    >
+                </FrameLayout>
+            </LinearLayout>
+        </android.support.v4.app.FragmentTabHost>
+    </LinearLayout>
+</LinearLayout>

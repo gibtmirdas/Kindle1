@@ -4,8 +4,8 @@
     <string name="action_settings">Settings</string>
     <string name="sentence_default">sentence to translate</string>
     <string name="Title">Twic on Android</string>
-    <string name="viewLangSrc">Langue source</string>
-    <string name="viewLangDest">Langue destination</string>
+    <string name="viewLangSrc">From:</string>
+    <string name="viewLangDst">To:</string>
     <string name="sendButton">send</string>
     <string name="responseView">Response</string>
     <string name="wordPositionLabel">Word start position</string>
@@ -13,4 +13,16 @@
     <string name="connexionError">Connexion error: Please enable your Wifi connexion</string>
     <string name="serverError">Server error: Unable to reach Twic server</string>
     <string name="shareError">Share Error: unable to process data</string>
+    <string name="buttonPrev">Previous</string>
+    <string name="buttonNext">Next</string>
+    <string name="speakerSrc">speakerSrc</string>
+    <string name="speakerDst">speakerDst</string>
+    <string name="translate">translate</string>
+
+    <string name="initTxt">Bonjour petit enculé de merde</string>
+    <string name="baseForm">Base form</string>
+    <string name="baseFormTitle">Base form</string>
+    <string name="translationsTitle">Translations</string>
+    <string name="collocationSrcTitle">Collocation source</string>
+    <string name="collocationDstTitle">Collocation destination</string>
 </resources>

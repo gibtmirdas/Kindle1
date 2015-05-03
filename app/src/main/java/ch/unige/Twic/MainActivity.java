@@ -2,12 +2,11 @@ package ch.unige.Twic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,8 +24,11 @@ import ch.unige.Twic.Twic.Exceptions.TwicException;
 import ch.unige.Twic.Twic.PairsList;
 import ch.unige.Twic.Twic.TwicFields;
 import ch.unige.Twic.Twic.TwicXmlParser;
-import ch.unige.Twic.Twic.tabs.Tab1Fragment;
-import ch.unige.Twic.Twic.tabs.Tab2Fragment;
+import ch.unige.Twic.Twic.tabs.InfoTab;
+import ch.unige.Twic.Twic.tabs.ItsTab;
+import ch.unige.Twic.Twic.tabs.MicrosoftTab;
+import ch.unige.Twic.Twic.tabs.TabManager;
+import ch.unige.Twic.Twic.tabs.TwicTab;
 import ch.unige.Twic.listeners.SendListener;
 import ch.unige.Twic.listeners.WifiState;
 import ch.unige.Twic.listeners.WifiStateObserver;
@@ -44,8 +46,10 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     private static Spinner spinSrc, spinDest;
     private static SeekBar wordPositionSlider;
     private static TextView wordPositionView;
-    private FragmentTabHost mTabHost;
+    private FragmentTabHost tabHost;
     WifiState wifiState;
+    private final int spinnerStyleItem = R.layout.spinner_item;
+    private final int spinnerStyleDropdown = R.layout.spinner_dropwdown;
 
     public MainActivity() {
         Log.e("FUCK","Init");
@@ -61,74 +65,83 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.container, new PlaceholderFragment())
-//                    .commit();
-//        }
-
-        setContentView(R.layout.fragment_main);
         Intent intent = getIntent();
-        mTabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
-        mTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
-        mTabHost.addTab(mTabHost.newTabSpec("tab1").setIndicator("Tab1"),
-                Tab1Fragment.class, null);
-        mTabHost.addTab(mTabHost.newTabSpec("tab2").setIndicator("Tab2"),
-                Tab2Fragment.class, null);
-        sendButton = (Button) findViewById(R.id.sendButton);
-        responseView = (TextView) findViewById(R.id.responseView);
-        inputField = (EditTextCustom) findViewById(R.id.inputSentenceField);
-
-        sendButton.setOnClickListener(new SendListener(this));
-
+        // Set size of EditText
+        setContentView(R.layout.fragment_main);
+        inputField = (EditTextCustom) findViewById(R.id.editText);
+        Point p = new Point();
+        getWindowManager().getDefaultDisplay().getSize(p);
+        inputField.setWidth((int) (p.x * (3.0 / 5.0)));
         flashView = (TextView) findViewById(R.id.flashView);
 
-        spinSrc = (Spinner) findViewById(R.id.spinSrc);
-        spinDest = (Spinner) findViewById(R.id.spinDest);
 
-        wordPositionSlider = (SeekBar) findViewById(R.id.wordPositionSlider);
-        wordPositionView = (TextView) findViewById(R.id.wordPositionView);
+        // Init tabs
+        tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+        tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
-        // Word position logic
-        wordPositionSlider.setMax(inputField.length());
-        inputField.setWordPositionSlider(wordPositionSlider);
-        wordPositionSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                inputField.setSelection(progress, inputField.getSelectionEnd());
-                inputField.setCursorVisible(true);
-                wordPositionView.setText(""+progress);
-            }
+        tabHost.addTab(tabHost.newTabSpec("twic").setIndicator("Twic"),
+                TwicTab.class, null);
+        tabHost.addTab(tabHost.newTabSpec("its").setIndicator("Its"),
+                ItsTab.class, null);
+        tabHost.addTab(tabHost.newTabSpec("microsoft").setIndicator("Microsoft"),
+                MicrosoftTab.class, null);
+        tabHost.addTab(tabHost.newTabSpec("info").setIndicator("Info"),
+                InfoTab.class, null);
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+        TabManager tabManager = new TabManager(tabHost, this);
+        tabHost.setOnTabChangedListener(tabManager);
+        // Init 1st part fields
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
-        });
-        inputField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        sendButton = (Button) findViewById(R.id.buttonSend);
+        sendButton.setOnClickListener(new SendListener(this, tabManager));
+//
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int currentPosition = inputField.getSelectionStart();
-                wordPositionSlider.setMax(s.length());
-                inputField.setSelection(currentPosition);
-                wordPositionSlider.setProgress(inputField.getSelectionStart());
-            }
-        });
-
-        // Load language pairs and codeNames
-        foobar(wifiState.isOnline(getContext()));
+        spinSrc = (Spinner) findViewById(R.id.spinnerSrc);
+        spinDest = (Spinner) findViewById(R.id.spinnerDst);
+//
+//        wordPositionSlider = (SeekBar) findViewById(R.id.wordPositionSlider);
+//        wordPositionView = (TextView) findViewById(R.id.wordPositionView);
+//
+//        // Word position logic
+//        wordPositionSlider.setMax(inputField.length());
+//        inputField.setWordPositionSlider(wordPositionSlider);
+//        wordPositionSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+//            @Override
+//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+//                inputField.setSelection(progress, inputField.getSelectionEnd());
+//                inputField.setCursorVisible(true);
+//                wordPositionView.setText(""+progress);
+//            }
+//
+//            @Override
+//            public void onStartTrackingTouch(SeekBar seekBar) { }
+//
+//            @Override
+//            public void onStopTrackingTouch(SeekBar seekBar) { }
+//        });
+//        inputField.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                int currentPosition = inputField.getSelectionStart();
+//                wordPositionSlider.setMax(s.length());
+//                inputField.setSelection(currentPosition);
+//                wordPositionSlider.setProgress(inputField.getSelectionStart());
+//            }
+//        });
+//
+//        // Load language pairs and codeNames
+        handleWifiState(wifiState.isOnline(getContext()));
 
         // Get intent, action and MIME type
         String action = intent.getAction();
@@ -144,7 +157,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
 
     @Override
     public void update(WifiState observable, Boolean isOnline) {
-        foobar(isOnline);
+        handleWifiState(isOnline);
     }
 
     @Override
@@ -152,7 +165,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
         return getApplicationContext();
     }
 
-    void foobar(Boolean isOnline) {
+    void handleWifiState(Boolean isOnline) {
         if(isOnline) {
             flashView.setText("");
             initSpinners();
@@ -199,8 +212,8 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(),
-                        android.R.layout.simple_spinner_item, PairsList.getTgtBySrcId(position));
-                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinnerStyleItem, PairsList.getTgtBySrcId(position));
+                dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
                 spinDest.setAdapter(dataAdapter);
             }
 
@@ -220,10 +233,23 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     }
 
     private void fillSpinner(Spinner spinner, List<String> list) {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
+               spinnerStyleItem, list);
+        dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
         spinner.setAdapter(dataAdapter);
+    }
+
+    public void flash(int msg){
+        flashView.setText(msg);
+    }
+
+    public void cleanFlash(){
+        if(flashView != null)
+            flashView.setText("");
+    }
+
+    public android.app.Fragment getFragment(int currentTab){
+        return getFragmentManager().findFragmentById(currentTab);
     }
 }
 

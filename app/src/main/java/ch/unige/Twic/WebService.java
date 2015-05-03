@@ -38,7 +38,7 @@ public class WebService {
         }
 
         if (response == null || response == "")
-            throw new TwicException();
+            throw new TwicException(R.string.serverError);
 
         return response;
     }
