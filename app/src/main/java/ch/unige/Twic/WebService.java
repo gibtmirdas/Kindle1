@@ -30,7 +30,7 @@ public class WebService implements TwicFields{
         HttpURLConnection connection;
         String response = "";
         try {
-            URI uri = new URI("http://latlapps.unige.ch/Synt?lg=fr&in=bite");
+            URI uri = new URI(path);
             URL url = new URL(uri.toURL().toString());
             connection = (HttpURLConnection) url.openConnection();
 
