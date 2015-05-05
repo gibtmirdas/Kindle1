@@ -22,15 +22,15 @@ public class TabManager implements TabHost.OnTabChangeListener {
 
     public void update(){
         if(mainActivity != null) {
-            mainActivity.cleanFlash();
+            MainActivity.cleanFlash();
             try {
                 String currentTab = tabHost.getCurrentTabTag();
                 android.support.v4.app.FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-                ManagableTab fragmentById = (ManagableTab) fragmentManager.findFragmentByTag(currentTab);;
+                ManagableTab fragmentById = (ManagableTab) fragmentManager.findFragmentByTag(currentTab);
                 fragmentById.update();
             } catch (TwicException e) {
                 e.printStackTrace();
-                mainActivity.flash(e.getMessageId());
+                MainActivity.flash(e.getMessageId());
             }
         }
     }

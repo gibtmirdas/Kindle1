@@ -19,7 +19,7 @@
     <string name="speakerDst">speakerDst</string>
     <string name="translate">translate</string>
 
-    <string name="initTxt">Bonjour petit enculé de merde</string>
+    <string name="initTxt">Une petite bière ça te dis ?</string>
     <string name="baseForm">Base form</string>
     <string name="baseFormTitle">Base form</string>
     <string name="translationsTitle">Translations</string>
@@ -30,4 +30,8 @@
     <string name="infoCredits">Created by:\n\tAdrien Python\n\tThomas Bertrand\nLATL, Université de Genève http://www.latl.unige.ch</string>
     <string name="infoVersion">Version: 0.9</string>
     <string name="infoLogo">unigeLogo</string>
+    <string name="itsTitle">Its response for input sentence:</string>
+    <string name="itsReponse">…waiting for server response…</string>
+    <string name="MsTitle">Microsoft Bing Translation response for input sentence:</string>
+    <string name="MsReponse">…waiting for server response…</string>
 </resources>

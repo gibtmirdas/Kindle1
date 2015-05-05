@@ -85,10 +85,9 @@ public class TwicTab extends Fragment implements ManagableTab{
     }
 
     public void update() throws TwicException {
-        if(TranslationInfo.getInstance().isIsInitialized()) {
+        if(TranslationInfo.isIsInitialized()) {
             String path = TwicUrlBuilder.getRequestUrl();
-            String response = null;
-            response = WebService.callUrl(path);
+            String response = WebService.callUrl(path);
             Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
 
             setWordList(listBaseForm, parseData.get("baseForm"));
