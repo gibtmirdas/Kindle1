@@ -25,4 +25,9 @@
     <string name="translationsTitle">Translations</string>
     <string name="collocationSrcTitle">Collocation source</string>
     <string name="collocationDstTitle">Collocation destination</string>
+    <string name="infoTitle">Twic Kindle Application</string>
+    <string name="infoMainLabel">TWiC (Translation of Words in Context) is an android application that provides terminological assistance for readers of foreign language documents.\nIt interacts with the LATL server to analyze the source text and display context-dependent translations.</string>
+    <string name="infoCredits">Created by:\n\tAdrien Python\n\tThomas Bertrand\nLATL, Université de Genève http://www.latl.unige.ch</string>
+    <string name="infoVersion">Version: 0.9</string>
+    <string name="infoLogo">unigeLogo</string>
 </resources>

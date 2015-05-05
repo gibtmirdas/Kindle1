@@ -7,14 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
+import ch.unige.Twic.Twic.Exceptions.TwicException;
 
-public class InfoTab extends Fragment {
+public class InfoTab extends Fragment implements ManagableTab{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View V = inflater.inflate(R.layout.info, container, false);
-        return V;
+        View v = inflater.inflate(R.layout.info, container, false);
+        MainActivity.cleanFlash();
+        return v;
+    }
+
+    @Override
+    public void update() throws TwicException {
+        // Nothing to do !
     }
 }

@@ -8,14 +8,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import ch.unige.Twic.R;
+import ch.unige.Twic.Twic.Exceptions.TwicException;
 
-public class MicrosoftTab extends Fragment {
+public class MicrosoftTab extends Fragment implements ManagableTab{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View V = inflater.inflate(R.layout.microsoft, container, false);
-        return V;
+        View v = inflater.inflate(R.layout.microsoft, container, false);
+        return v;
+    }
+
+    @Override
+    public void update() throws TwicException {
+
     }
 }

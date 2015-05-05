@@ -9,13 +9,15 @@ import android.widget.TextView;
 
 import java.util.Map;
 
+import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
+import ch.unige.Twic.Twic.TranslationInfo;
 import ch.unige.Twic.Twic.TwicUrlBuilder;
 import ch.unige.Twic.Twic.TwicXmlParser;
 import ch.unige.Twic.WebService;
 
-public class TwicTab extends Fragment implements ManagableTab {
+public class TwicTab extends Fragment implements ManagableTab{
 
     private TextView baseForm;
 
@@ -25,15 +27,24 @@ public class TwicTab extends Fragment implements ManagableTab {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.twic, container, false);
         baseForm = (TextView) v.findViewById(R.id.baseForm);
+
+        try {
+            MainActivity.cleanFlash();
+            update();
+        } catch (TwicException e) {
+            e.printStackTrace();
+            MainActivity.flash(e.getMessageId());
+        }
         return v;
     }
 
-    @Override
     public void update() throws TwicException {
-        String path = TwicUrlBuilder.getRequestUrl();
-        String response = null;
-        response = WebService.callUrl(path);
-        Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
-        baseForm.setText(parseData.get("baseForm")[0]);
+        if(TranslationInfo.getInstance().isIsInitialized()) {
+            String path = TwicUrlBuilder.getRequestUrl();
+            String response = null;
+            response = WebService.callUrl(path);
+            Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
+            baseForm.setText(parseData.get("baseForm")[0]);
+        }
     }
 }

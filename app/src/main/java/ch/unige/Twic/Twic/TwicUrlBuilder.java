@@ -20,4 +20,14 @@ public class TwicUrlBuilder implements TwicFields{
         }
         return path;
     }
+
+    public static String getMsRequestUrl(){
+//        microsoftTranslateAddress + "appId=" + encodeURIComponent("Bearer " + accessToken) + "&from=" + srclg + "&to=" + tgtlg + "&contentType=text/plain&text=" + encodeURIComponent(selection);
+//        String path = MICROSOFTTRANSLATEADDRESS + java.net.URLEncoder.encode("Bearer "+, "UTF-8")
+        return "";
+    }
+
+    public static String getItsRequestUrl(){
+        return "";
+    }
 }

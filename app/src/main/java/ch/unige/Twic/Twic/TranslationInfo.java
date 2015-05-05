@@ -39,4 +39,8 @@ public class TranslationInfo {
     public int getPosition() {
         return position;
     }
+
+    public static boolean isIsInitialized() {
+        return isInitialized;
+    }
 }
