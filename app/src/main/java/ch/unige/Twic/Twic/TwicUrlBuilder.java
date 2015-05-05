@@ -10,7 +10,7 @@ public class TwicUrlBuilder implements TwicFields{
         String encodedText = "";
         try {
             encodedText = java.net.URLEncoder.encode(a.getText(), "UTF-8");
-        } catch (UnsupportedEncodingException e) { }
+        } catch (UnsupportedEncodingException ignored) { }
 
         String path = TWICURL;
         if (CodeNamesMap.getCodeNameLength() > 0) {
@@ -22,12 +22,36 @@ public class TwicUrlBuilder implements TwicFields{
     }
 
     public static String getMsRequestUrl(){
-//        microsoftTranslateAddress + "appId=" + encodeURIComponent("Bearer " + accessToken) + "&from=" + srclg + "&to=" + tgtlg + "&contentType=text/plain&text=" + encodeURIComponent(selection);
-//        String path = MICROSOFTTRANSLATEADDRESS + java.net.URLEncoder.encode("Bearer "+, "UTF-8")
-        return "";
+        TranslationInfo info = TranslationInfo.getInstance();
+        String path = MICROSOFTTRANSLATEADDRESS;
+
+        if (CodeNamesMap.getCodeNameLength() > 0) {
+            String srclg = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
+            String tgtlg = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
+            try {
+                path += "from=" + srclg + "&to=" + tgtlg + "&contentType=text/plain&text=" + java.net.URLEncoder.encode(info.getText(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return path;
     }
 
+
+
     public static String getItsRequestUrl(){
-        return "";
+        TranslationInfo info = TranslationInfo.getInstance();
+        String path = ITSRL;
+
+        if (CodeNamesMap.getCodeNameLength() > 0) {
+            String srclg = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
+            String tgtlg = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
+            try {
+                path += "&srclg=" + srclg + "&tgtlg=" + tgtlg + "&text=" + java.net.URLEncoder.encode(info.getText(), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+        return path;
     }
 }

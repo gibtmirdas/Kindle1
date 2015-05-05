@@ -1,5 +1,7 @@
 package ch.unige.Twic.Twic;
 
+import android.util.Log;
+
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
@@ -32,6 +34,26 @@ public class TwicXmlParser implements TwicFields{
             }
         }
         return responseMap;
+    }
+
+    public static Map<String, String[]> parseItsResponse(String response){
+        Document doc = convertXml(response);
+        String rootName = doc.getDocumentElement().getTagName();
+        Node nNode = doc.getElementsByTagName(rootName).item(0);
+
+        Map<String, String[]> responseMap = new HashMap<>();
+        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+            Element eElement = (Element) nNode;
+            for(String nodeName: FIELDSITS){
+                NodeList element = eElement.getElementsByTagName(nodeName);
+                responseMap.put(nodeName, getToPut(element));
+            }
+        }
+        return responseMap;
+    }
+
+    public static Map<String, String[]> parseMsResponse(String response) {
+        return null;
     }
 
     public static void parseLanguagelist(String response){
