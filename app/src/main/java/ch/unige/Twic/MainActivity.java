@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -42,19 +41,37 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     private static Button sendButton;
     private static TextView flashView;
     private static EditTextCustom inputField;
-    private static TextView responseView;
     private static Spinner spinSrc, spinDest;
-    private static SeekBar wordPositionSlider;
-    private static TextView wordPositionView;
+    private static Button prevButton, nextButton;
+
     private FragmentTabHost tabHost;
     WifiState wifiState;
     private final int spinnerStyleItem = R.layout.spinner_item;
     private final int spinnerStyleDropdown = R.layout.spinner_dropwdown;
 
     public MainActivity() {
-        Log.e("FUCK","Init");
+        Log.e("Twic","Init");
         wifiState = WifiState.getWifiState();
         wifiState.addObserver(this);
+    }
+
+
+    private int[] findNextWord(String text, int position) {
+        // Get next word start position
+        String furtherText = text.substring(position);
+        int nextWordStart = furtherText.indexOf(" ")+1;
+        nextWordStart = position + (nextWordStart == -1 ? 0 : nextWordStart);
+
+        // If there's many spaces between the two words, seek the next word true beginning
+        while (nextWordStart+1 < text.length() && text.charAt(nextWordStart) == ' ')
+            nextWordStart++;
+
+        // Get next word end position
+        furtherText = text.substring(nextWordStart);
+        int nextWordEnd = furtherText.indexOf(" ");
+        nextWordEnd = (nextWordEnd == -1 ? text.length() : nextWordStart + nextWordEnd);
+
+        return new int[] {nextWordStart, nextWordEnd};
     }
 
     @Override
@@ -95,52 +112,52 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
 
         sendButton = (Button) findViewById(R.id.buttonSend);
         sendButton.setOnClickListener(new SendListener(this, tabManager));
-//
 
         spinSrc = (Spinner) findViewById(R.id.spinnerSrc);
         spinDest = (Spinner) findViewById(R.id.spinnerDst);
-//
-//        wordPositionSlider = (SeekBar) findViewById(R.id.wordPositionSlider);
-//        wordPositionView = (TextView) findViewById(R.id.wordPositionView);
-//
-//        // Word position logic
-//        wordPositionSlider.setMax(inputField.length());
-//        inputField.setWordPositionSlider(wordPositionSlider);
-//        wordPositionSlider.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-//                inputField.setSelection(progress, inputField.getSelectionEnd());
-//                inputField.setCursorVisible(true);
-//                wordPositionView.setText(""+progress);
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) { }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) { }
-//        });
-//        inputField.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                int currentPosition = inputField.getSelectionStart();
-//                wordPositionSlider.setMax(s.length());
-//                inputField.setSelection(currentPosition);
-//                wordPositionSlider.setProgress(inputField.getSelectionStart());
-//            }
-//        });
-//
-//        // Load language pairs and codeNames
+
+
+        prevButton = (Button) findViewById(R.id.buttonPrev);
+        nextButton = (Button) findViewById(R.id.buttonNext);
+
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = inputField.getText().toString();
+                int position = inputField.getSelectionEnd();
+
+                // Reverse the text & indexes in order to search the "next" word (i.e. the previous)
+                String rText = new StringBuilder(text).reverse().toString();
+                int rPosition = text.length() - position;
+
+                int[] nextWordPosition = findNextWord(rText, rPosition);
+
+                int nextWordStart = text.length() - nextWordPosition[1];
+                int nextWordEnd = text.length() - nextWordPosition[0];
+
+                // Select next word
+                inputField.requestFocus();
+                inputField.setSelection(nextWordStart, nextWordEnd);
+            }
+        });
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = inputField.getText().toString();
+                int currentPosition = inputField.getSelectionStart();
+                int[] nextWordPosition = findNextWord(text, currentPosition);
+
+                int nextWordStart = nextWordPosition[0];
+                int nextWordEnd = nextWordPosition[1];
+
+                // Select next word
+                inputField.requestFocus();
+                inputField.setSelection(nextWordStart, nextWordEnd);
+            }
+        });
+
+        // Load language pairs and codeNames
         handleWifiState(wifiState.isOnline(getContext()));
 
         // Get intent, action and MIME type
@@ -185,23 +202,15 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-
-        return super.onOptionsItemSelected(item);
+         return super.onOptionsItemSelected(item);
     }
 
     private void initSpinners(){
         try {
             TwicXmlParser.parseLanguagelist(WebService.callUrl(TwicFields.LANGUAGELISTURL));
             List<String> initList = PairsList.getSrcList(true);
+            clearSpinner(spinSrc);
+            clearSpinner(spinDest);
             fillSpinner(spinSrc, initList);
             fillSpinner(spinDest, PairsList.getTgtFromSrc(initList.get(0), true));
         } catch (TwicException e) {
@@ -230,6 +239,10 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
                 sharedText = sharedText.substring(1, sharedText.lastIndexOf('"'));
             inputField.setText(sharedText);
         }
+    }
+
+    private void clearSpinner(Spinner spinner) {
+        spinner.setAdapter(null);
     }
 
     private void fillSpinner(Spinner spinner, List<String> list) {

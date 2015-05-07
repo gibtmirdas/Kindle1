@@ -2,22 +2,17 @@ package ch.unige.Twic.listeners;
 
 import android.view.View;
 import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.Spinner;
-import android.widget.TextView;
-
-import java.util.Map;
 
 import ch.unige.Twic.EditTextCustom;
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
-import ch.unige.Twic.Twic.Exceptions.TwicException;
+
 import ch.unige.Twic.Twic.TranslationInfo;
 import ch.unige.Twic.Twic.TwicFields;
-import ch.unige.Twic.Twic.TwicUrlBuilder;
-import ch.unige.Twic.Twic.TwicXmlParser;
+
 import ch.unige.Twic.Twic.tabs.TabManager;
-import ch.unige.Twic.WebService;
+
 
 /**
  * Created by thomas on 2/27/15.

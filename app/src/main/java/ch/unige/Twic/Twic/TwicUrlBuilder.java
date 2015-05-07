@@ -1,5 +1,7 @@
 package ch.unige.Twic.Twic;
 
+import android.util.Log;
+
 import java.io.UnsupportedEncodingException;
 
 public class TwicUrlBuilder implements TwicFields{
@@ -17,6 +19,7 @@ public class TwicUrlBuilder implements TwicFields{
             String srclg = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
             String tgtlg = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
             path += "&pos=" + a.getOffset() + "&srclg=" + srclg + "&tgtlg=" + tgtlg + "&text=" + encodedText;
+            Log.e("TwicAnal", "position: "+info.getPosition()+ ", offset: " + a.getOffset());
         }
         return path;
     }
@@ -37,8 +40,6 @@ public class TwicUrlBuilder implements TwicFields{
         return path;
     }
 
-
-
     public static String getItsRequestUrl(){
         TranslationInfo info = TranslationInfo.getInstance();
         String path = ITSRL;
@@ -53,5 +54,9 @@ public class TwicUrlBuilder implements TwicFields{
             }
         }
         return path;
+    }
+
+    public static String getSyntRequestUrl(String word, String lang) {
+        return SYNTURL + "lg="+ lang +"&in=\"" + word + "\"";
     }
 }

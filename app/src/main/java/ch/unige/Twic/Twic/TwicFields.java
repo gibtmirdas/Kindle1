@@ -33,4 +33,7 @@ public interface TwicFields {
 
     // ITS
     String ITSRL = SERVERURL + "/Twicff?act=sentence";
+
+    // SYNT
+    String SYNTURL = SERVERURL + "/Synt?";
 }

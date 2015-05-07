@@ -13,6 +13,7 @@
     <string name="connexionError">Connexion error: Please enable your Wifi connexion</string>
     <string name="serverError">Server error: Unable to reach Twic server</string>
     <string name="shareError">Share Error: unable to process data</string>
+    <string name="soundError">Sound Error: unable to play sound</string>
     <string name="buttonPrev">Previous</string>
     <string name="buttonNext">Next</string>
     <string name="speakerSrc">speakerSrc</string>
