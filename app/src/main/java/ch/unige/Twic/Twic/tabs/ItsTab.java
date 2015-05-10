@@ -45,7 +45,7 @@ public class ItsTab extends Fragment implements ManagableTab, WebServiceObserver
     public void update() throws TwicException {
         if(TranslationInfo.isIsInitialized()) {
             String path = TwicUrlBuilder.getItsRequestUrl();
-            webService.execute(path);
+            (new WebService(this)).execute(path);
         }
     }
 

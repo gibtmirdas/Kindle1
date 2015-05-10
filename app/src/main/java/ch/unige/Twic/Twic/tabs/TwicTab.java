@@ -30,7 +30,6 @@ import android.widget.SimpleAdapter;
 public class TwicTab extends Fragment implements ManagableTab, WebServiceObserver {
 
     private ListView listTranslations, listCollocationSrc, listCollocationDst, listBaseForm;
-    private WebService webService;
 
     private void setWordList(ListView list, String[] words, String lang) {
         ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
@@ -63,7 +62,6 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        webService = new WebService(this);
         View v = inflater.inflate(R.layout.twic, container, false);
 
         AdapterView.OnItemClickListener wordListsOnClickListener = new AdapterView.OnItemClickListener() {
@@ -127,7 +125,7 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
 
     public void update() throws TwicException {
         if(TranslationInfo.isIsInitialized())
-            webService.execute(TwicUrlBuilder.getRequestUrl());
+            (new WebService(this)).execute(TwicUrlBuilder.getRequestUrl());
     }
 
     @Override
