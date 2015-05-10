@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import java.net.NetworkInterface;
 import java.util.List;
+import java.util.Set;
 
 import ch.unige.Twic.Twic.Exceptions.TwicException;
 import ch.unige.Twic.Twic.PairsList;
@@ -46,17 +47,17 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     private static Button prevButton, nextButton;
 
     private FragmentTabHost tabHost;
-    WifiState wifiState;
+    private WifiState wifiState;
     private final int spinnerStyleItem = R.layout.spinner_item;
     private final int spinnerStyleDropdown = R.layout.spinner_dropwdown;
 
-    public MainActivity() {
-        Log.e("Twic","Init");
-        wifiState = WifiState.getWifiState();
-        wifiState.addObserver(this);
-    }
 
-
+    /**
+     * From the current cursor position, find the next word (starting and ending) position.
+     * @param text      Search the next word in this text
+     * @param position  Current position of the cursor (on the selected word)
+     * @return A two dimensional array; index 0 = start position, index 1 = end position.
+     */
     private int[] findNextWord(String text, int position) {
         // Get next word start position
         String furtherText = text.substring(position);
@@ -75,6 +76,89 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
         return new int[] {nextWordStart, nextWordEnd};
     }
 
+    private void handleWifiState(Boolean isOnline) {
+        if(isOnline) {
+            flashView.setText("");
+            initSpinners();
+            sendButton.setEnabled(true);
+        } else {
+            flashView.setText(R.string.connexionError);
+            sendButton.setEnabled(false);
+        }
+    }
+
+    /**
+     * Initialize the spinners with the language list and set their listeners.
+     */
+    private void initSpinners(){
+        try {
+            TwicXmlParser.parseLanguagelist(WebService.callUrl(TwicFields.LANGUAGELISTURL));
+            List<String> initList = PairsList.getSrcList(true);
+            clearSpinner(spinSrc);
+            clearSpinner(spinDest);
+            fillSpinner(spinSrc, initList);
+            fillSpinner(spinDest, PairsList.getTgtFromSrc(initList.get(0), true));
+        } catch (TwicException e) {
+            flashView.setText(R.string.serverError);
+        }
+
+        spinSrc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(),
+                        spinnerStyleItem, PairsList.getTgtBySrcId(position));
+                dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
+                spinDest.setAdapter(dataAdapter);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
+
+    }
+
+    /**
+     * Handle text shared from other applications in order to put them in the EditText.
+     * @param intent
+     */
+    private void handleSendText(Intent intent) {
+        Object extra = intent.getExtras().get(Intent.EXTRA_TEXT);
+        if (extra != null) {
+            String sharedText = extra.toString();
+            // Text shared from the Kindle Books application is surrounded by quotes
+            // If the shared text start with one, extract the text from them, and remove the rest.
+            int lastQuotePosition = sharedText.lastIndexOf('"');
+            if (sharedText.charAt(0) == '"' && lastQuotePosition > 0)
+                sharedText = sharedText.substring(1, lastQuotePosition);
+            inputField.setText(sharedText);
+        }
+    }
+
+    private void clearSpinner(Spinner spinner) {
+        spinner.setAdapter(null);
+    }
+
+    private void fillSpinner(Spinner spinner, List<String> list) {
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
+                spinnerStyleItem, list);
+        dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
+        spinner.setAdapter(dataAdapter);
+    }
+
+    public MainActivity() {
+        Log.e("Twic","Init");
+        wifiState = WifiState.getWifiState();
+        wifiState.addObserver(this);
+    }
+
+    /**
+     * Initialize the main activity view:
+     * <ul>
+     *    <li>EditText size
+     *    <li>Buttons listeners
+     *    <li>Load language list in the spinners
+     * </ul>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,14 +182,10 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
         tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
-        tabHost.addTab(tabHost.newTabSpec("twic").setIndicator("Twic"),
-                TwicTab.class, null);
-        tabHost.addTab(tabHost.newTabSpec("its").setIndicator("Its"),
-                ItsTab.class, null);
-        tabHost.addTab(tabHost.newTabSpec("microsoft").setIndicator("Microsoft"),
-                MicrosoftTab.class, null);
-        tabHost.addTab(tabHost.newTabSpec("info").setIndicator("Info"),
-                InfoTab.class, null);
+        tabHost.addTab(tabHost.newTabSpec("twic").setIndicator("Twic"), TwicTab.class, null);
+        tabHost.addTab(tabHost.newTabSpec("its").setIndicator("Its"), ItsTab.class, null);
+        tabHost.addTab(tabHost.newTabSpec("microsoft").setIndicator("Microsoft"), MicrosoftTab.class, null);
+        tabHost.addTab(tabHost.newTabSpec("info").setIndicator("Info"), InfoTab.class, null);
 
         TabManager tabManager = new TabManager(tabHost, this);
         tabHost.setOnTabChangedListener(tabManager);
@@ -183,17 +263,6 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
         return getApplicationContext();
     }
 
-    void handleWifiState(Boolean isOnline) {
-        if(isOnline) {
-            flashView.setText("");
-            initSpinners();
-            sendButton.setEnabled(true);
-        } else {
-            flashView.setText(R.string.connexionError);
-            sendButton.setEnabled(false);
-        }
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -201,63 +270,18 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-         return super.onOptionsItemSelected(item);
-    }
-
-    private void initSpinners(){
-        try {
-            TwicXmlParser.parseLanguagelist(WebService.callUrl(TwicFields.LANGUAGELISTURL));
-            List<String> initList = PairsList.getSrcList(true);
-            clearSpinner(spinSrc);
-            clearSpinner(spinDest);
-            fillSpinner(spinSrc, initList);
-            fillSpinner(spinDest, PairsList.getTgtFromSrc(initList.get(0), true));
-        } catch (TwicException e) {
-            flashView.setText(R.string.serverError);
-        }
-
-        spinSrc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getContext(),
-                        spinnerStyleItem, PairsList.getTgtBySrcId(position));
-                dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
-                spinDest.setAdapter(dataAdapter);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
-        });
-
-    }
-
-    void handleSendText(Intent intent) {
-        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-        if (sharedText != null) {
-            if (sharedText.charAt(0) == '"')
-                sharedText = sharedText.substring(1, sharedText.lastIndexOf('"'));
-            inputField.setText(sharedText);
-        }
-    }
-
-    private void clearSpinner(Spinner spinner) {
-        spinner.setAdapter(null);
-    }
-
-    private void fillSpinner(Spinner spinner, List<String> list) {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
-               spinnerStyleItem, list);
-        dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
-        spinner.setAdapter(dataAdapter);
-    }
-
+    /**
+     * Write a new text in the flashView
+     * @param msg  Message to write in the flashView
+     */
     public static void flash(int msg){
         if(flashView != null)
             flashView.setText(msg);
     }
 
+    /**
+     * Remove current text from the flashView
+     */
     public static void cleanFlash(){
         if(flashView != null)
             flashView.setText("");
