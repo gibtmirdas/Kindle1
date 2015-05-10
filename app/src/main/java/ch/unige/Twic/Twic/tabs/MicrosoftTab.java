@@ -7,17 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.Map;
-
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
-import ch.unige.Twic.Twic.TranslationInfo;
-import ch.unige.Twic.Twic.TwicUrlBuilder;
-import ch.unige.Twic.Twic.TwicXmlParser;
-import ch.unige.Twic.WebService;
+import ch.unige.Twic.WebServiceObserver;
 
-public class MicrosoftTab extends Fragment implements ManagableTab{
+public class MicrosoftTab extends Fragment implements ManagableTab, WebServiceObserver {
 
     private TextView MsReponse;
 
@@ -38,10 +33,15 @@ public class MicrosoftTab extends Fragment implements ManagableTab{
 
     @Override
     public void update() throws TwicException {
-        if(TranslationInfo.isIsInitialized()) {
-            String path = TwicUrlBuilder.getMsRequestUrl();
-            String response = WebService.callMsUrl(path);
-            MsReponse.setText(response);
-        }
+//        if(TranslationInfo.isIsInitialized()) {
+//            String path = TwicUrlBuilder.getMsRequestUrl();
+//            String response = WebService.callMsUrl(path);
+//            MsReponse.setText(response);
+//        }
+    }
+
+    @Override
+    public void updateResponse(String tag) {
+        MsReponse.setText("HELLO FUCKER");
     }
 }

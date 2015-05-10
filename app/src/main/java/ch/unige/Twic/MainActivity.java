@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.net.NetworkInterface;
 import java.util.List;
 
 import ch.unige.Twic.Twic.Exceptions.TwicException;
@@ -33,7 +34,7 @@ import ch.unige.Twic.listeners.WifiState;
 import ch.unige.Twic.listeners.WifiStateObserver;
 
 
-public class MainActivity extends FragmentActivity implements WifiStateObserver  {
+public class MainActivity extends FragmentActivity implements WifiStateObserver {
 
     /**
      * Ui instances

@@ -16,14 +16,17 @@ import ch.unige.Twic.Twic.TranslationInfo;
 import ch.unige.Twic.Twic.TwicUrlBuilder;
 import ch.unige.Twic.Twic.TwicXmlParser;
 import ch.unige.Twic.WebService;
+import ch.unige.Twic.WebServiceObserver;
 
-public class ItsTab extends Fragment implements ManagableTab{
+public class ItsTab extends Fragment implements ManagableTab, WebServiceObserver{
 
     TextView itsResponse;
+    WebService webService;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+        webService = new WebService(this);
         View v = inflater.inflate(R.layout.its, container, false);
         itsResponse = (TextView) v.findViewById(R.id.itsReponse);
 
@@ -42,9 +45,12 @@ public class ItsTab extends Fragment implements ManagableTab{
     public void update() throws TwicException {
         if(TranslationInfo.isIsInitialized()) {
             String path = TwicUrlBuilder.getItsRequestUrl();
-            String response = WebService.callUrl(path);
-            Map<String, String[]> parseData = TwicXmlParser.parseItsResponse(response);
-            itsResponse.setText(parseData.get("sentenceTranslation")[0]);
+            webService.execute(path);
         }
+    }
+
+    public void updateResponse(String response) {
+        Map<String, String[]> parseData = TwicXmlParser.parseItsResponse(response);
+        itsResponse.setText(parseData.get("sentenceTranslation")[0]);
     }
 }

@@ -23,11 +23,14 @@ import ch.unige.Twic.Twic.TranslationInfo;
 import ch.unige.Twic.Twic.TwicUrlBuilder;
 import ch.unige.Twic.Twic.TwicXmlParser;
 import ch.unige.Twic.WebService;
+import ch.unige.Twic.WebServiceObserver;
+
 import android.widget.SimpleAdapter;
 
-public class TwicTab extends Fragment implements ManagableTab{
+public class TwicTab extends Fragment implements ManagableTab, WebServiceObserver {
 
     private ListView listTranslations, listCollocationSrc, listCollocationDst, listBaseForm;
+    private WebService webService;
 
     private void setWordList(ListView list, String[] words, String lang) {
         ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
@@ -60,8 +63,7 @@ public class TwicTab extends Fragment implements ManagableTab{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
+        webService = new WebService(this);
         View v = inflater.inflate(R.layout.twic, container, false);
 
         AdapterView.OnItemClickListener wordListsOnClickListener = new AdapterView.OnItemClickListener() {
@@ -124,11 +126,15 @@ public class TwicTab extends Fragment implements ManagableTab{
     }
 
     public void update() throws TwicException {
+        if(TranslationInfo.isIsInitialized())
+            webService.execute(TwicUrlBuilder.getRequestUrl());
+    }
+
+    @Override
+    public void updateResponse(String response) {
         String srcLang, dstLang;
         String[] baseForm, translation, collocationSource, collocationTarget;
         if(TranslationInfo.isIsInitialized()) {
-            String path = TwicUrlBuilder.getRequestUrl();
-            String response = WebService.callUrl(path);
             Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
 
             TranslationInfo info = TranslationInfo.getInstance();
