@@ -54,18 +54,19 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
     private static TextView flashView;
     private static EditText inputField;
     private static Spinner spinSrc, spinDest;
-    private static Button prevButton, nextButton;
+    private static ImageButton keyboardButton;
 
+    private static Button prevButton, nextButton;
     private FragmentTabHost tabHost;
     private WifiState wifiState;
     private final static int spinnerStyleItem = R.layout.spinner_item;
-    private final static int spinnerStyleDropdown = R.layout.spinner_dropwdown;
 
+    private final static int spinnerStyleDropdown = R.layout.spinner_dropwdown;
     private static int positionSpinnerDst;
+
     private static boolean clickUpdateSpinner = true;
 
     private static Context staticContext;
-
     private WebService webService;
 
 
