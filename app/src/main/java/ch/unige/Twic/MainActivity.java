@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -35,7 +36,7 @@ import ch.unige.Twic.listeners.WifiState;
 import ch.unige.Twic.listeners.WifiStateObserver;
 
 
-public class MainActivity extends FragmentActivity implements WifiStateObserver {
+public class MainActivity extends FragmentActivity implements WifiStateObserver, WebServiceObserver {
 
     /**
      * Ui instances
@@ -50,6 +51,8 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     private WifiState wifiState;
     private final int spinnerStyleItem = R.layout.spinner_item;
     private final int spinnerStyleDropdown = R.layout.spinner_dropwdown;
+
+    private WebService webService;
 
 
     /**
@@ -79,7 +82,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     private void handleWifiState(Boolean isOnline) {
         if(isOnline) {
             flashView.setText("");
-            initSpinners();
+            webService.execute(TwicFields.LANGUAGELISTURL);
             sendButton.setEnabled(true);
         } else {
             flashView.setText(R.string.connexionError);
@@ -90,17 +93,13 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     /**
      * Initialize the spinners with the language list and set their listeners.
      */
-    private void initSpinners(){
-        try {
-            TwicXmlParser.parseLanguagelist(WebService.callUrl(TwicFields.LANGUAGELISTURL));
-            List<String> initList = PairsList.getSrcList(true);
-            clearSpinner(spinSrc);
-            clearSpinner(spinDest);
-            fillSpinner(spinSrc, initList);
-            fillSpinner(spinDest, PairsList.getTgtFromSrc(initList.get(0), true));
-        } catch (TwicException e) {
-            flashView.setText(R.string.serverError);
-        }
+    private void initSpinners(String languageList){
+        TwicXmlParser.parseLanguagelist(languageList);
+        List<String> initList = PairsList.getSrcList(true);
+        clearSpinner(spinSrc);
+        clearSpinner(spinDest);
+        fillSpinner(spinSrc, initList);
+        fillSpinner(spinDest, PairsList.getTgtFromSrc(initList.get(0), true));
 
         spinSrc.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -135,7 +134,8 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     }
 
     private void clearSpinner(Spinner spinner) {
-        spinner.setAdapter(null);
+//        spinner.setAdapter(null);
+        spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{""}));
     }
 
     private void fillSpinner(Spinner spinner, List<String> list) {
@@ -167,7 +167,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
             StrictMode.setThreadPolicy(policy);
         }
         Intent intent = getIntent();
-
+        webService = new WebService(this);
         // Set size of EditText
         setContentView(R.layout.fragment_main);
         inputField = (EditTextCustom) findViewById(R.id.editText);
@@ -284,5 +284,10 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     public static void cleanFlash(){
         if(flashView != null)
             flashView.setText("");
+    }
+
+    @Override
+    public void updateResponse(String response) {
+        initSpinners(response);
     }
 }
