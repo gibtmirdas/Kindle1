@@ -1,8 +1,5 @@
 package ch.unige.Twic.Twic;
 
-/**
- * Created by Dwii on 02.03.15.
- */
 public class TextAnalyzer {
 
     private static TextAnalysis stripText(TextAnalysis analysis) {
@@ -61,7 +58,7 @@ public class TextAnalyzer {
                 if (!dotFounded) {
                     dotFounded = true;
                 } else {
-                    left = text.substring(offset, i + 1);
+                    right = text.substring(offset, i + 1);
                     break;
                 }
             }

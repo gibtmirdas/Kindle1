@@ -62,6 +62,14 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
         list.setAdapter(mSchedule);
     }
 
+    private String[] formatCollocations(String[] collocations) {
+        String[] fCollocations = new String[collocations.length];
+        for (int i = 0; i < collocations.length ; i++) {
+            fCollocations[i] = collocations[i].replace("|", ", ");
+        }
+        return fCollocations;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.twic, container, false);
@@ -158,9 +166,8 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
 
         setWordList(listBaseForm, baseForm, srcLang);
         setWordList(listTranslations, translation, dstLang);
-        setWordList(listCollocationSrc, collocationSource, dstLang);
-        setWordList(listCollocationDst, collocationTarget, dstLang);
-
+        setWordList(listCollocationSrc, formatCollocations(collocationSource), srcLang);
+        setWordList(listCollocationDst, formatCollocations(collocationTarget), dstLang);
         progressBar.setVisibility(View.INVISIBLE);
     }
 }

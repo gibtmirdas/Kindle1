@@ -139,8 +139,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver 
     }
 
     private void fillSpinner(Spinner spinner, List<String> list) {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
-                spinnerStyleItem, list);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, spinnerStyleItem, list);
         dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
         spinner.setAdapter(dataAdapter);
     }

@@ -1,8 +1,5 @@
 package ch.unige.Twic.Twic;
 
-/**
- * Created by Dwii on 02.03.15.
- */
 public class TextAnalysis {
     private String text;
     private int offset;
