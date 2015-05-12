@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -43,7 +44,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
      */
     private static Button sendButton;
     private static TextView flashView;
-    private static EditTextCustom inputField;
+    private static EditText inputField;
     private static Spinner spinSrc, spinDest;
     private static Button prevButton, nextButton;
 
@@ -170,7 +171,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
         webService = new WebService(this);
         // Set size of EditText
         setContentView(R.layout.fragment_main);
-        inputField = (EditTextCustom) findViewById(R.id.editText);
+        inputField = (EditText) findViewById(R.id.editText);
         Point p = new Point();
         getWindowManager().getDefaultDisplay().getSize(p);
         inputField.setWidth((int) (p.x * (3.0 / 5.0)));

@@ -2,9 +2,9 @@ package ch.unige.Twic.listeners;
 
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 
-import ch.unige.Twic.EditTextCustom;
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
 
@@ -19,14 +19,14 @@ import ch.unige.Twic.Twic.tabs.TabManager;
  */
 public class SendListener implements View.OnClickListener, TwicFields {
     private Button sendButton;
-    private EditTextCustom inputField;
+    private EditText inputField;
     private Spinner spinnerSrc, spinnerDst;
     private TabManager tabManager;
 
     public SendListener(MainActivity rootView, TabManager tabManager) {
         this.tabManager = tabManager;
         this.sendButton = (Button) rootView.findViewById(R.id.buttonSend);
-        this.inputField = (EditTextCustom) rootView.findViewById(R.id.editText);
+        this.inputField = (EditText) rootView.findViewById(R.id.editText);
         this.spinnerSrc = (Spinner) rootView.findViewById(R.id.spinnerSrc);
         this.spinnerDst = (Spinner) rootView.findViewById(R.id.spinnerDst);
     }

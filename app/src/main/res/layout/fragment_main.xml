@@ -3,174 +3,141 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
 
-    <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/GridLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:columnCount="10"
-        android:orientation="horizontal"
-        android:rowCount="8"
-        tools:context=".GridXMLActivity">
 
-        <Space
-            android:layout_width="@dimen/margin"
-            android:layout_height="@dimen/margin"
-            android:layout_column="0"
-            android:layout_columnSpan="1"
-            android:layout_row="0"
-            android:layout_rowSpan="1" />
+    <RelativeLayout
+        android:layout_margin="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.5">
 
         <TextView
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_column="1"
-            android:layout_columnSpan="9"
-            android:layout_row="0"
-            android:layout_rowSpan="1"
+            android:layout_height="wrap_content"
+            android:text="Hello"
             android:textColor="#ffff0017"
             android:id="@+id/flashView"/>
 
-
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_column="1"
-            android:layout_columnSpan="5"
-            android:layout_row="1"
-            android:layout_rowSpan="2"
-            android:orientation="horizontal">
+            android:layout_below="@+id/flashView"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <ch.unige.Twic.EditTextCustom
-                android:id="@+id/editText"
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_margin="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:layout_gravity="bottom"
+                android:layout_height="match_parent"
+                android:layout_weight="0.4">
+
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dip"
+                    android:layout_above="@+id/inputCtrl"
+                    android:text="@string/initTxt"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/border"
+                    android:inputType="textMultiLine"
+                    android:gravity="left|top" />
+
+                <RelativeLayout
+                    android:id="@+id/inputCtrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true">
+
+                    <Button
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/buttonPrev"
+                        android:id="@+id/buttonPrev"
+                        android:layout_alignParentLeft="true" />
+
+                    <Button
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/buttonNext"
+                        android:id="@+id/buttonNext"
+                        android:layout_alignParentRight="true" />
+
+                    <ImageButton
+                        android:layout_width="60dp"
+                        android:layout_height="50dp"
+                        android:scaleType="center"
+                        android:background="@drawable/keyboard_icon"
+                        android:id="@+id/buttonKeyboard"
+                        android:layout_centerInParent="true" />
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <LinearLayout
                 android:background="@drawable/border"
-                android:gravity="top|left"
-                android:inputType="textMultiLine"
-                android:lines="8"
-                android:maxLines="10"
-                android:minLines="6"
-                android:scrollbars="vertical"
-                android:text="@string/initTxt" />
+                android:orientation="vertical"
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6">
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/viewLangSrc"
+                        android:textSize="20sp"
+                        android:id="@+id/textViewLangSrc"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="false"
+                        android:layout_centerVertical="true" />
+
+                    <Spinner
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dropdown"
+                        android:id="@+id/spinnerSrc"
+                        android:layout_toRightOf="@+id/textViewLangSrc" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent">
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/viewLangDst"
+                        android:textSize="20sp"
+                        android:id="@+id/textViewLangDst"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="false"
+                        android:layout_centerVertical="true" />
+                    <Spinner
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:spinnerMode="dropdown"
+                        android:id="@+id/spinnerDst"
+                        android:layout_toRightOf="@+id/textViewLangDst" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="match_parent">
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/translate"
+                        android:id="@+id/buttonSend"
+
+                        android:layout_centerHorizontal="true"
+                        android:layout_alignParentTop="true" />
+
+                </RelativeLayout>
+            </LinearLayout>
+
         </LinearLayout>
 
-        <Space
-            android:layout_width="@dimen/margin_small"
-            android:layout_height="@dimen/margin_small"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_row="6"
-            android:layout_rowSpan="1" />
-
-        <Button
-            android:id="@+id/buttonPrev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:layout_columnSpan="1"
-            android:layout_gravity="left|top"
-            android:layout_row="7"
-            android:layout_rowSpan="1"
-            android:text="@string/buttonPrev" />
-
-        <Button
-            android:id="@+id/buttonNext"
-            android:layout_column="5"
-            android:layout_columnSpan="1"
-            android:layout_gravity="right|top"
-            android:layout_row="7"
-            android:layout_rowSpan="1"
-            android:text="@string/buttonNext" />
-
-        <Space
-            android:layout_width="@dimen/margin"
-            android:layout_height="@dimen/margin"
-            android:layout_column="6"
-            android:layout_columnSpan="1"
-            android:layout_row="0"
-            android:layout_rowSpan="1" />
-
-        <TableLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_column="7"
-            android:layout_columnSpan="3"
-            android:layout_row="1"
-            android:layout_rowSpan="3"
-            android:background="@drawable/border">
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="0"
-                    android:layout_span="1"
-                    android:text="@string/viewLangSrc"
-                    android:textSize="20sp" />
-
-                <Spinner
-                    android:id="@+id/spinnerSrc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:spinnerMode="dropdown" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <Space
-                    android:layout_height="@dimen/margin"
-                    android:layout_column="1" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="0"
-                    android:layout_span="1"
-                    android:text="@string/viewLangDst"
-                    android:textSize="20sp" />
-
-                <Spinner
-                    android:id="@+id/spinnerDst"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:layout_span="2"
-                    android:spinnerMode="dropdown"
-                    />
-
-            </TableRow>
-            <TableRow>
-                <Space
-                    android:layout_height="@dimen/margin"
-                    android:layout_column="1" />
-            </TableRow>
-            <TableRow>
-                <Button
-                    android:id="@+id/buttonSend"
-                    android:layout_column="0"
-                    android:layout_span="3"
-                    android:layout_gravity="center|top"
-                    android:text="@string/translate" />
-            </TableRow>
-        </TableLayout>
-    </GridLayout>
-
+    </RelativeLayout>
 
     <Space
         android:layout_width="@dimen/margin_big"
@@ -178,7 +145,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_weight="0.5">
 
         <android.support.v4.app.FragmentTabHost
             xmlns:android="http://schemas.android.com/apk/res/android"
