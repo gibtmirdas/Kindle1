@@ -18,7 +18,7 @@
     <string name="buttonNext">Next</string>
     <string name="speakerSrc">speakerSrc</string>
     <string name="speakerDst">speakerDst</string>
-    <string name="translate">translate</string>
+    <string name="translate">Translate</string>
 
     <string name="initTxt">Une petite bière ça te dis ?</string>
     <string name="baseForm">Base form</string>
