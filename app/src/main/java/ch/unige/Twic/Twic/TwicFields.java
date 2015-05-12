@@ -36,4 +36,7 @@ public interface TwicFields {
 
     // SYNT
     String SYNTURL = SERVERURL + "/Synt?";
+
+    // Auto codeName
+    String AUTO = "Auto";
 }

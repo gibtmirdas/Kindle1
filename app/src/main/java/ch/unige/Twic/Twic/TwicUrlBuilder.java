@@ -3,10 +3,16 @@ package ch.unige.Twic.Twic;
 import android.util.Log;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Map;
+
+import ch.unige.Twic.MainActivity;
+import ch.unige.Twic.R;
+import ch.unige.Twic.Twic.Exceptions.TwicException;
+import ch.unige.Twic.WebService;
 
 public class TwicUrlBuilder implements TwicFields{
 
-    public static String getRequestUrl(){
+    public static String getTwicRequestUrl(){
         TranslationInfo info = TranslationInfo.getInstance();
         TextAnalysis a = TextAnalyzer.analyse(new TextAnalysis(info.getText(), info.getPosition()));
         String encodedText = "";
@@ -18,7 +24,10 @@ public class TwicUrlBuilder implements TwicFields{
         if (CodeNamesMap.getCodeNameLength() > 0) {
             String srclg = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
             String tgtlg = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
-            path += "&pos=" + a.getOffset() + "&srclg=" + srclg + "&tgtlg=" + tgtlg + "&text=" + encodedText;
+            path += "&pos=" + a.getOffset() +
+                    "&srclg=" + srclg +
+                    "&tgtlg=" + tgtlg +
+                    "&text=" + encodedText;
             Log.e("TwicAnal", "position: "+info.getPosition()+ ", offset: " + a.getOffset());
         }
         return path;
@@ -29,10 +38,13 @@ public class TwicUrlBuilder implements TwicFields{
         String path = MICROSOFTTRANSLATEADDRESS;
 
         if (CodeNamesMap.getCodeNameLength() > 0) {
-            String srclg = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
-            String tgtlg = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
+            String[] lg = convertAutoLgToTwicDefault(new String[]{
+                    CodeNamesMap.getCodeFromName(info.getCodeLgSrc()),
+                    CodeNamesMap.getCodeFromName(info.getCodeLgDst())});
             try {
-                path += "from=" + srclg + "&to=" + tgtlg + "&contentType=text/plain&text=" + java.net.URLEncoder.encode(info.getText(), "UTF-8");
+                path += "from=" + lg[0] +
+                        "&to=" + lg[1] +
+                        "&contentType=text/plain&text=" + java.net.URLEncoder.encode(info.getText(), "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -43,12 +55,13 @@ public class TwicUrlBuilder implements TwicFields{
     public static String getItsRequestUrl(){
         TranslationInfo info = TranslationInfo.getInstance();
         String path = ITSRL;
-
         if (CodeNamesMap.getCodeNameLength() > 0) {
             String srclg = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
             String tgtlg = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
             try {
-                path += "&srclg=" + srclg + "&tgtlg=" + tgtlg + "&text=" + java.net.URLEncoder.encode(info.getText(), "UTF-8");
+                path += "&srclg=" + srclg +
+                        "&tgtlg=" + tgtlg +
+                        "&text=" + java.net.URLEncoder.encode(info.getText(), "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -58,5 +71,24 @@ public class TwicUrlBuilder implements TwicFields{
 
     public static String getSyntRequestUrl(String word, String lang) {
         return SYNTURL + "lg="+ lang +"&in=\"" + word + "\"";
+    }
+
+    private static String[] convertAutoLgToTwicDefault(String[] lg){
+        if(!lg[0].equals(AUTO) && !lg[1].equals(AUTO))
+            return lg;
+        try {
+            // Make a dummy call to get twic src and tgt language
+            Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(WebService.callUrl(getTwicRequestUrl()));
+
+            // Update info with the response
+            TranslationInfo.getInstance().setCodeLgSrc(parseData.get("sourceLanguage")[0]);
+            TranslationInfo.getInstance().setCodeLgDst(parseData.get("targetLanguage")[0]);
+            lg[0] = TranslationInfo.getInstance().getCodeLgSrc();
+            lg[1] = TranslationInfo.getInstance().getCodeLgDst();
+            MainActivity.setSpinnerValue(PairsList.getIndexesForPair(lg[0],lg[1]));
+        } catch (TwicException e) {
+            MainActivity.flash(R.string.shareError);
+        }
+        return lg;
     }
 }

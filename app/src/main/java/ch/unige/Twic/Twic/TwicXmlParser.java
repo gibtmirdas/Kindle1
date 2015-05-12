@@ -73,16 +73,21 @@ public class TwicXmlParser implements TwicFields{
         NodeList pairs = doc.getElementsByTagName("pair");
         String src, tgt;
         boolean trad;
+        PairsList.add(new LanguagePair(AUTO,AUTO,true));
         for(int i=0; i<pairs.getLength(); i++){
             Node nNode = pairs.item(i);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                 src = ((Element) nNode).getAttribute("src");
                 tgt = ((Element) nNode).getAttribute("tgt");
                 trad = ((Element) nNode).getAttribute("trad").equals("true");
+                if (!PairsList.containsKey(src))
+                    PairsList.add(new LanguagePair(src, AUTO, true));
+                LanguagePair srcAuto = new LanguagePair(AUTO, tgt, true);
+                if(!PairsList.containsCouple(srcAuto))
+                    PairsList.add(srcAuto);
                 PairsList.add(new LanguagePair(src, tgt, trad));
             }
         }
-
         // set codeNames
         NodeList codeNames = doc.getElementsByTagName("language");
         String code, name;
@@ -94,7 +99,7 @@ public class TwicXmlParser implements TwicFields{
             synt = ((Element) nNode).getAttribute("synt").equals("true");
             CodeNamesMap.put(code,new CodeName(code, name, synt));
         }
-
+        CodeNamesMap.put(AUTO, new CodeName(AUTO,AUTO,true));
     }
 
     private static Document convertXml(String response){

@@ -43,4 +43,12 @@ public class TranslationInfo {
     public static boolean isIsInitialized() {
         return isInitialized;
     }
+
+    public void setCodeLgSrc(String codeLgSrc) {
+        this.codeLgSrc = codeLgSrc;
+    }
+
+    public void setCodeLgDst(String codeLgDst) {
+        this.codeLgDst = codeLgDst;
+    }
 }

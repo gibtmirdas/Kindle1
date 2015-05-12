@@ -138,7 +138,7 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
     public void update() throws TwicException {
         progressBar.setVisibility(View.VISIBLE);
         if(TranslationInfo.isIsInitialized())
-            (new WebService(this)).execute(TwicUrlBuilder.getRequestUrl());
+            (new WebService(this)).execute(TwicUrlBuilder.getTwicRequestUrl());
         else
             progressBar.setVisibility(View.INVISIBLE);
     }

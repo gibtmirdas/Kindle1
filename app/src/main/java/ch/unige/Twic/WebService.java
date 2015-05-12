@@ -62,18 +62,6 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
         return response;
     }
 
-//    public static String callMsUrl(String path) throws TwicException {
-//        String response="";
-//        String token = getPostMsTokenUrl();
-//        HttpURLConnection connection;
-//            URI uri = new URI(path+"&appId=" + URLEncoder.encode("Bearer " + token, "UTF-8"));
-//            URL url = new URL(uri.toURL().toString());
-//            connection = (HttpURLConnection) url.openConnection();
-//
-//            response = readResponse(connection);
-//        return response;
-//    }
-
     public static String getPostMsTokenUrl() throws TwicException {
         String response="";
         try {
@@ -167,7 +155,6 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
         HttpResponse response;
         String responseString = null;
         try {
-
             response = httpclient.execute(new HttpGet(final_uri));
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == HttpStatus.SC_OK){

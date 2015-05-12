@@ -26,4 +26,13 @@ public class LanguagePair {
     public boolean isTrad() {
         return trad;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(!(o instanceof LanguagePair))
+            return false;
+        LanguagePair remote = (LanguagePair) o;
+
+        return remote.getSrc().equals(this.src) && remote.getTgt().equals(this.tgt);
+    }
 }

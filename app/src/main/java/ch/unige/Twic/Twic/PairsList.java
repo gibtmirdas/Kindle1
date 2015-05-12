@@ -48,4 +48,27 @@ public class PairsList{
         }
         return tmp;
     }
+
+    public static boolean containsKey(String key){
+        for (LanguagePair lp: listPairs)
+            if(lp.getSrc().equals(key))
+                return true;
+        return false;
+    }
+
+    public static int[] getIndexesForPair(String srcLg, String dstLg){
+        int[] indexes = new int[2];
+        List<String> srcList = getSrcList(true);
+        String nameFromCode = CodeNamesMap.getNameFromCode(srcLg);
+        indexes[0] = srcList.indexOf(nameFromCode);
+        indexes[1] = getTgtFromSrc(srcLg, true).indexOf(CodeNamesMap.getNameFromCode(dstLg));
+        return indexes;
+    }
+
+    public static boolean containsCouple(LanguagePair couple){
+        for(LanguagePair lp: listPairs)
+            if(lp.equals(couple))
+                return true;
+        return false;
+    }
 }

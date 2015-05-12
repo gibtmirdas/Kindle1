@@ -2,6 +2,7 @@ package ch.unige.Twic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.DataSetObserver;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Debug;
@@ -12,10 +13,12 @@ import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import java.net.NetworkInterface;
@@ -49,8 +52,13 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
 
     private FragmentTabHost tabHost;
     private WifiState wifiState;
-    private final int spinnerStyleItem = R.layout.spinner_item;
-    private final int spinnerStyleDropdown = R.layout.spinner_dropwdown;
+    private final static int spinnerStyleItem = R.layout.spinner_item;
+    private final static int spinnerStyleDropdown = R.layout.spinner_dropwdown;
+
+    private static int positionSpinnerDst;
+    private static boolean clickUpdateSpinner = true;
+
+    private static Context staticContext;
 
     private WebService webService;
 
@@ -108,12 +116,36 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
                         spinnerStyleItem, PairsList.getTgtBySrcId(position));
                 dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
                 spinDest.setAdapter(dataAdapter);
+                spinDest.setSelection(0, true);
+                if (!clickUpdateSpinner) {
+                    spinDest.setSelection(positionSpinnerDst);
+                    clickUpdateSpinner = true;
+                    positionSpinnerDst = 0;
+                }
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) { }
+            public void onNothingSelected(AdapterView<?> parent) {
+                if (!clickUpdateSpinner) {
+                    spinDest.setSelection(positionSpinnerDst);
+                    clickUpdateSpinner = true;
+                    positionSpinnerDst = 0;
+                }
+            }
         });
+        spinDest.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                clickUpdateSpinner = true;
+                positionSpinnerDst = 0;
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                clickUpdateSpinner = true;
+                positionSpinnerDst = 0;
+            }
+        });
     }
 
     /**
@@ -259,6 +291,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
 
     @Override
     public Context getContext() {
+        staticContext = getApplicationContext();
         return getApplicationContext();
     }
 
@@ -289,5 +322,13 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
     @Override
     public void updateResponse(String response) {
         initSpinners(response);
+    }
+
+    public static void setSpinnerValue(int[] selectionPosition){
+        // Select item of src spinner
+        spinSrc.setSelection(selectionPosition[0], true);
+        spinSrc.performItemClick(spinSrc, selectionPosition[0],selectionPosition[0]);
+        positionSpinnerDst = selectionPosition[1];
+        clickUpdateSpinner = false;
     }
 }
