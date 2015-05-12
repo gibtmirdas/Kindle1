@@ -1,5 +1,6 @@
 package ch.unige.Twic;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -8,14 +9,18 @@ import android.os.Debug;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.text.Layout;
 import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -47,6 +52,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
     private static EditText inputField;
     private static Spinner spinSrc, spinDest;
     private static Button prevButton, nextButton;
+    private static ImageButton keyboardButton;
 
     private FragmentTabHost tabHost;
     private WifiState wifiState;
@@ -83,7 +89,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
     private void handleWifiState(Boolean isOnline) {
         if(isOnline) {
             flashView.setText("");
-            webService.execute(TwicFields.LANGUAGELISTURL);
+            (new WebService(this)).execute(TwicFields.LANGUAGELISTURL);
             sendButton.setEnabled(true);
         } else {
             flashView.setText(R.string.connexionError);
@@ -151,6 +157,11 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
         wifiState.addObserver(this);
     }
 
+    public void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
     /**
      * Initialize the main activity view:
      * <ul>
@@ -167,6 +178,7 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
         }
+
         Intent intent = getIntent();
         webService = new WebService(this);
         // Set size of EditText
@@ -176,7 +188,6 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
         getWindowManager().getDefaultDisplay().getSize(p);
         inputField.setWidth((int) (p.x * (3.0 / 5.0)));
         flashView = (TextView) findViewById(R.id.flashView);
-
 
         // Init tabs
         tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
@@ -200,6 +211,50 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
 
         prevButton = (Button) findViewById(R.id.buttonPrev);
         nextButton = (Button) findViewById(R.id.buttonNext);
+
+        keyboardButton = (ImageButton) findViewById(R.id.buttonKeyboard);
+
+        keyboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager manager = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                manager.toggleSoftInput(R.id.editText, 0);
+            }
+        });
+
+        // Dont show the keyboard but set the cursor at the right position
+        // From: http://stackoverflow.com/questions/10263384/android-how-to-get-text-position-from-touch-event
+        inputField.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                inputField.requestFocus();
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+
+                        Layout layout = ((EditText) v).getLayout();
+                        float x = event.getX() + inputField.getScrollX();
+                        float y = event.getY() + inputField.getScrollY();
+                        int line = layout.getLineForVertical((int) y);
+
+                        // Here is what you wanted:
+
+                        int offset = layout.getOffsetForHorizontal(line,  x);
+
+                        if(offset>0)
+                            if(x > layout.getLineMax(0))
+                                inputField.setSelection(offset);     // touch was at end of text
+                            else
+                                inputField.setSelection(offset - 1);
+
+                        break;
+                }
+
+                return true;
+            }
+        });
+
+
 
         prevButton.setOnClickListener(new View.OnClickListener() {
             @Override

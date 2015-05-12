@@ -38,7 +38,9 @@
                     android:layout_alignParentTop="true"
                     android:background="@drawable/border"
                     android:inputType="textMultiLine"
-                    android:gravity="left|top" />
+                    android:gravity="left|top"
+                    android:scrollbars="vertical"
+                    />
 
                 <RelativeLayout
                     android:id="@+id/inputCtrl"
