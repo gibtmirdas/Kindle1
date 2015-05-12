@@ -1,10 +1,5 @@
 package ch.unige.Twic.Twic;
 
-import android.util.Log;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.DocumentBuilder;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -15,17 +10,20 @@ import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by thomas on 2/27/15.
- */
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+
 public class TwicXmlParser implements TwicFields{
 
     public static Map<String, String[]> parseTwicResponse(String response){
+        Map<String, String[]> responseMap = new HashMap<>();
+        if(response == null || response.length() == 0)
+            return responseMap;
         Document doc = convertXml(response);
         String rootName = doc.getDocumentElement().getTagName();
         Node nNode = doc.getElementsByTagName(rootName).item(0);
 
-        Map<String, String[]> responseMap = new HashMap<>();
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
             Element eElement = (Element) nNode;
             for(String nodeName: FIELDS){
@@ -37,11 +35,13 @@ public class TwicXmlParser implements TwicFields{
     }
 
     public static Map<String, String[]> parseItsResponse(String response){
+        Map<String, String[]> responseMap = new HashMap<>();
+        if(response == null || response.length() == 0)
+            return responseMap;
         Document doc = convertXml(response);
         String rootName = doc.getDocumentElement().getTagName();
         Node nNode = doc.getElementsByTagName(rootName).item(0);
 
-        Map<String, String[]> responseMap = new HashMap<>();
         if (nNode.getNodeType() == Node.ELEMENT_NODE) {
             Element eElement = (Element) nNode;
             for(String nodeName: FIELDSITS){
@@ -52,8 +52,19 @@ public class TwicXmlParser implements TwicFields{
         return responseMap;
     }
 
-    public static Map<String, String[]> parseMsResponse(String response) {
-        return null;
+    public static String parseMsResponse(String response) {
+        response = response.
+                replace("/&#39;/g", "'").
+                replace("/&quot;/g", "\"").
+                replace("/&gt;/g", ">").
+                replace("/&lt;/g", "<").
+                replace("/&amp;/g", "&");
+        response = response.substring(1, response.length());
+        if (response.charAt(0) == '"')
+            response = response.substring(1, response.length());
+        if (response.charAt(response.length() - 1) == '"')
+            response = response.substring(0, response.length() - 1);
+        return response;
     }
 
     public static void parseLanguagelist(String response){

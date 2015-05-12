@@ -62,33 +62,17 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
         return response;
     }
 
-
-    public static String callMsUrl(String path) throws TwicException {
-        String response="";
-        String token = getPostMsTokenUrl();
-        HttpURLConnection connection;
-        try {
-            URI uri = new URI(path+"&appId=" + URLEncoder.encode("Bearer " + token, "UTF-8"));
-            URL url = new URL(uri.toURL().toString());
-            connection = (HttpURLConnection) url.openConnection();
-
-            response = readResponse(connection);
-
-            response = response.replace("/&#39;/g", "'").replace("/&quot;/g", "\"").replace("/&gt;/g", ">").replace("/&lt;/g", "<").replace("/&amp;/g", "&");
-            if (response.charAt(0)== '"')
-                response = response.substring(1, response.length());
-            if (response.charAt(response.length()-1) == '"')
-                response = response.substring(0, response.length()-1);
-            connection.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        if (response.equals(""))
-            throw new TwicException(R.string.serverError);
-        return response;
-    }
+//    public static String callMsUrl(String path) throws TwicException {
+//        String response="";
+//        String token = getPostMsTokenUrl();
+//        HttpURLConnection connection;
+//            URI uri = new URI(path+"&appId=" + URLEncoder.encode("Bearer " + token, "UTF-8"));
+//            URL url = new URL(uri.toURL().toString());
+//            connection = (HttpURLConnection) url.openConnection();
+//
+//            response = readResponse(connection);
+//        return response;
+//    }
 
     public static String getPostMsTokenUrl() throws TwicException {
         String response="";
@@ -164,13 +148,27 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
         br.close();
         return result;
     }
+
     @Override
     protected String doInBackground(String... uri) {
+        String final_uri = uri[0];
+
+        // If request for Microsoft => get the token before
+        if(uri.length > 1 && uri[1].equals("ms")){
+            try {
+                String token = getPostMsTokenUrl();
+                final_uri += "&appId=" + URLEncoder.encode("Bearer " + token, "UTF-8");
+            } catch (TwicException | UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }
+
         HttpClient httpclient = new DefaultHttpClient();
         HttpResponse response;
         String responseString = null;
         try {
-            response = httpclient.execute(new HttpGet(uri[0]));
+
+            response = httpclient.execute(new HttpGet(final_uri));
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == HttpStatus.SC_OK){
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -182,8 +180,6 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
                 response.getEntity().getContent().close();
                 throw new IOException(statusLine.getReasonPhrase());
             }
-        } catch (ClientProtocolException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

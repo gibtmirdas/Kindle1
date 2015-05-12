@@ -27,6 +27,8 @@ public class TextAnalyzer {
     }
 
     private static TextAnalysis splitText(TextAnalysis analysis) {
+        if(analysis.getText().length() == 0 )
+            return analysis;
         String text = analysis.getText();
         int offset = analysis.getOffset();
         if (offset == text.length())

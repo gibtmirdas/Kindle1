@@ -30,10 +30,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/itsReponse"
+                android:text="@string/itsReponseDefault"
                 android:id="@+id/itsReponse"
                 android:background="@drawable/border"
                 android:password="false" />
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:id="@+id/progressBarIts" />
         </TableRow>
     </TableLayout>
 </LinearLayout>

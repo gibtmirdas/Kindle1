@@ -33,6 +33,9 @@
     <string name="infoLogo">unigeLogo</string>
     <string name="itsTitle">Its response for input sentence:</string>
     <string name="itsReponse">…waiting for server response…</string>
+    <string name="itsReponseDefault">…Try a translation request first…</string>
     <string name="MsTitle">Microsoft Bing Translation response for input sentence:</string>
     <string name="MsReponse">…waiting for server response…</string>
+    <string name="MsReponseDefault">…Try a translation request first…</string>
+    <string name="responseEmpty">…Nothing to show…</string>
 </resources>

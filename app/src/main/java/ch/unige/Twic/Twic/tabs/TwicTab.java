@@ -25,11 +25,13 @@ import ch.unige.Twic.Twic.TwicXmlParser;
 import ch.unige.Twic.WebService;
 import ch.unige.Twic.WebServiceObserver;
 
+import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
 
 public class TwicTab extends Fragment implements ManagableTab, WebServiceObserver {
 
     private ListView listTranslations, listCollocationSrc, listCollocationDst, listBaseForm;
+    private ProgressBar progressBar;
 
     private void setWordList(ListView list, String[] words, String lang) {
         ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
@@ -63,6 +65,8 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.twic, container, false);
+        progressBar = (ProgressBar) v.findViewById(R.id.progressBarTwic);
+        progressBar.setVisibility(View.INVISIBLE);
 
         AdapterView.OnItemClickListener wordListsOnClickListener = new AdapterView.OnItemClickListener() {
             @Override
@@ -124,8 +128,11 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
     }
 
     public void update() throws TwicException {
+        progressBar.setVisibility(View.VISIBLE);
         if(TranslationInfo.isIsInitialized())
             (new WebService(this)).execute(TwicUrlBuilder.getRequestUrl());
+        else
+            progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -153,5 +160,7 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
         setWordList(listTranslations, translation, dstLang);
         setWordList(listCollocationSrc, collocationSource, dstLang);
         setWordList(listCollocationDst, collocationTarget, dstLang);
+
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }
