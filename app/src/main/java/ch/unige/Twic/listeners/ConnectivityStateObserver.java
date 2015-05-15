@@ -4,6 +4,6 @@ import android.content.Context;
 
 
 public interface ConnectivityStateObserver {
-    public void update(ConnectivityState observable, Boolean isOnline);
-    public Context getContext();
+    void update(Boolean isOnline);
+    Context getContext();
 }

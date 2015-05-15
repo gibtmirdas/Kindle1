@@ -1,22 +1,17 @@
 package ch.unige.Twic;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.text.Layout;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,14 +19,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import java.net.NetworkInterface;
 import java.util.List;
-import java.util.Set;
 
-import ch.unige.Twic.Twic.Exceptions.TwicException;
 import ch.unige.Twic.Twic.PairsList;
 import ch.unige.Twic.Twic.TwicFields;
 import ch.unige.Twic.Twic.TwicXmlParser;
@@ -92,10 +83,10 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
     }
 
     /**
-     * Handle connexion/deconnexion of the wifi to update the UI and notify the user.
+     * Handle connexion/deconnexion of the network to update the UI and notify the user.
      * @param isOnline current state of the wifi.
      */
-    private void handleWifiState(Boolean isOnline) {
+    private void handleConnectivityState(Boolean isOnline) {
         if(isOnline) {
             cleanFlash();
             new WebService(this).execute(TwicFields.LANGUAGELISTURL);
@@ -193,14 +184,13 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
         spinner.setAdapter(dataAdapter);
     }
 
-    public void hideSoftKeyboard() {
-        InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-    }
-
+    /**
+     * Automatically called when the connectivity state changes.
+     * @param isOnline
+     */
     @Override
-    public void update(ConnectivityState observable, Boolean isOnline) {
-        handleWifiState(isOnline);
+    public void update(Boolean isOnline) {
+        handleConnectivityState(isOnline);
     }
 
     @Override
@@ -241,18 +231,16 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
         initSpinners(response);
     }
 
+    /**
+     * Set the source spinner position and the second one accordingly.
+     * @param selectionPosition position of the source and target spinner.
+     */
     public static void setSpinnerValue(int[] selectionPosition){
         // Select item of src spinner
         spinSrc.setSelection(selectionPosition[0], true);
         spinSrc.performItemClick(spinSrc, selectionPosition[0],selectionPosition[0]);
         positionSpinnerDst = selectionPosition[1];
         clickUpdateSpinner = false;
-    }
-
-    public MainActivity() {
-        Log.e("Twic", "Init");
-        connectivityState = ConnectivityState.getConnectivityState();
-        connectivityState.addObserver(this);
     }
 
     /**
@@ -266,6 +254,10 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        connectivityState = ConnectivityState.getConnectivityState();
+        connectivityState.addObserver(this);
+
         setContentView(R.layout.activity_main);
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -290,9 +282,8 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
         tabHost.addTab(tabHost.newTabSpec("microsoft").setIndicator("Microsoft"), MicrosoftTab.class, null);
         tabHost.addTab(tabHost.newTabSpec("info").setIndicator("Info"), InfoTab.class, null);
 
+        // Init component listeners
         TabManager tabManager = new TabManager(tabHost, this);
-        tabHost.setOnTabChangedListener(tabManager);
-        // Init 1st part fields
 
         sendButton = (Button) findViewById(R.id.buttonSend);
         sendButton.setOnClickListener(new SendListener(this, tabManager));
@@ -402,6 +393,6 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
         super.onResume();
 
         // Load language pairs and codeNames
-        handleWifiState(connectivityState.isOnline(getContext()));
+        handleConnectivityState(connectivityState.isOnline(getContext()));
     }
 }

@@ -34,6 +34,9 @@ import javax.net.ssl.HttpsURLConnection;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
 import ch.unige.Twic.Twic.TwicFields;
 
+/**
+ * Handle web service calls to the TWiC server.
+ */
 public class WebService extends AsyncTask<String, String, String> implements TwicFields{
 
     private WebServiceObserver tab;
@@ -42,6 +45,12 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
         this.tab = tab;
     }
 
+    /**
+     * Query an HTTP URL address.
+     * @param path URL address to query.
+     * @return HTTP response of the query.
+     * @throws TwicException
+     */
     public static String callUrl(String path) throws TwicException {
         HttpURLConnection connection;
         String response = "";
@@ -58,9 +67,15 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
 
         if (response.equals(""))
             throw new TwicException(R.string.serverError);
+
         return response;
     }
 
+    /**
+     * Get a Microsoft OAuth access token.
+     * @return Microsoft access token.
+     * @throws TwicException
+     */
     public static String getPostMsTokenUrl() throws TwicException {
         String response="";
         try {
@@ -80,9 +95,8 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
             params.add(new BasicNameValuePair("client_secret", MICROSOFTACCESSSECRET));
 
             OutputStream os = connection.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getQuery(params));
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+            writer.write(buildQueryParameters(params));
             writer.flush();
             writer.close();
             os.close();
@@ -99,10 +113,17 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
 
         if (response.equals(""))
             throw new TwicException(R.string.serverError);
+
         return response;
     }
 
-    private static String getQuery(List<NameValuePair> params) throws UnsupportedEncodingException {
+    /**
+     * Build the query list of parameters.
+     * @param params parameters of the query.
+     * @return Query parameters list.
+     * @throws UnsupportedEncodingException
+     */
+    private static String buildQueryParameters(List<NameValuePair> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         boolean first = true;
         for (NameValuePair pair : params)
@@ -118,8 +139,14 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
         return result.toString();
     }
 
+    /**
+     * Execute and read the query response.
+     * @param connection url connexion to execute and read.
+     * @return Query response
+     * @throws IOException
+     */
     private static String readResponse(URLConnection connection) throws IOException {
-    // Read response
+        // Read response
         InputStream stream = connection.getInputStream();
         InputStreamReader isReader = new InputStreamReader(stream);
 
@@ -136,6 +163,11 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
         return result;
     }
 
+    /**
+     * Execute an HTTP query asynchronously.
+     * @param uri query to execute
+     * @return Query response
+     */
     @Override
     protected String doInBackground(String... uri) {
         String final_uri = uri[0];
@@ -171,6 +203,11 @@ public class WebService extends AsyncTask<String, String, String> implements Twi
         }
         return responseString;
     }
+
+    /**
+     * Automatically notify the tab when an asynchronous query was completed.
+     * @param result query response
+     */
 
     @Override
     protected void onPostExecute(String result) {

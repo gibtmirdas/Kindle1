@@ -6,7 +6,10 @@ import android.widget.TabHost;
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
 
-public class TabManager implements TabHost.OnTabChangeListener {
+/**
+ * Handle tab updates.
+ */
+public class TabManager {
 
     FragmentTabHost tabHost;
     MainActivity mainActivity;
@@ -16,10 +19,9 @@ public class TabManager implements TabHost.OnTabChangeListener {
         this.mainActivity = mainActivity;
     }
 
-    @Override
-    public void onTabChanged(String tabId) {
-    }
-
+    /**
+     * Update the current tab.
+     */
     public void update(){
         if(mainActivity != null) {
             MainActivity.cleanFlash();

@@ -1,7 +1,7 @@
 package ch.unige.Twic.Twic.Exceptions;
 
 /**
- * {@link TwicException} represent an Twic exception raised by issues like connectivity error to the Twic web service or bad url leading to a bad response from the Twic web service
+ * {@link TwicException} represent a TWiC exception raised by issues like connectivity error to the TWiC web service or bad url leading to a bad response from the TWiC web service
  */
 public class TwicException extends Exception {
     /**

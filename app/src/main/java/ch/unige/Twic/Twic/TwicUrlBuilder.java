@@ -35,7 +35,6 @@ public class TwicUrlBuilder implements TwicFields{
                     "&srclg=" + srclg +
                     "&tgtlg=" + tgtlg +
                     "&text=" + encodedText;
-            Log.e("TwicAnal", "position: "+info.getPosition()+ ", offset: " + a.getOffset());
         }
         return path;
     }

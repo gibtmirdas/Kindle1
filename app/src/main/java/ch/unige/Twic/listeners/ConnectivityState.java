@@ -46,7 +46,7 @@ public class ConnectivityState {
 
     public void updateObservers() {
         for(ConnectivityStateObserver o : observers) {
-            o.update(this, isOnline(o.getContext()));
+            o.update(isOnline(o.getContext()));
         }
     }
 
