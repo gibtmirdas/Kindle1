@@ -3,20 +3,16 @@ package ch.unige.Twic;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.DataSetObserver;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Debug;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.text.Layout;
-import android.text.SpannableString;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,14 +20,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
-import java.net.NetworkInterface;
 import java.util.List;
-import java.util.Set;
 
-import ch.unige.Twic.Twic.Exceptions.TwicException;
 import ch.unige.Twic.Twic.PairsList;
 import ch.unige.Twic.Twic.TwicFields;
 import ch.unige.Twic.Twic.TwicXmlParser;
@@ -41,11 +33,11 @@ import ch.unige.Twic.Twic.tabs.MicrosoftTab;
 import ch.unige.Twic.Twic.tabs.TabManager;
 import ch.unige.Twic.Twic.tabs.TwicTab;
 import ch.unige.Twic.listeners.SendListener;
-import ch.unige.Twic.listeners.WifiState;
-import ch.unige.Twic.listeners.WifiStateObserver;
+import ch.unige.Twic.listeners.ConnectivityState;
+import ch.unige.Twic.listeners.ConnectivityStateObserver;
 
 
-public class MainActivity extends FragmentActivity implements WifiStateObserver, WebServiceObserver {
+public class MainActivity extends FragmentActivity implements ConnectivityStateObserver, WebServiceObserver {
 
     /**
      * Ui instances
@@ -55,19 +47,16 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
     private static EditText inputField;
     private static Spinner spinSrc, spinDest;
     private static ImageButton keyboardButton;
-
     private static Button prevButton, nextButton;
     private FragmentTabHost tabHost;
-    private WifiState wifiState;
+
+    private ConnectivityState connectivityState;
     private final static int spinnerStyleItem = R.layout.spinner_item;
 
     private final static int spinnerStyleDropdown = R.layout.spinner_dropwdown;
     private static int positionSpinnerDst;
 
     private static boolean clickUpdateSpinner = true;
-
-    private static Context staticContext;
-    private WebService webService;
 
 
     /**
@@ -94,19 +83,24 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
         return new int[] {nextWordStart, nextWordEnd};
     }
 
+    /**
+     * Handle connexion/deconnexion of the wifi to update the UI and notify the user.
+     * @param isOnline current state of the wifi.
+     */
     private void handleWifiState(Boolean isOnline) {
         if(isOnline) {
-            flashView.setText("");
-            webService.execute(TwicFields.LANGUAGELISTURL);
+            cleanFlash();
+            new WebService(this).execute(TwicFields.LANGUAGELISTURL);
             sendButton.setEnabled(true);
         } else {
-            flashView.setText(R.string.connexionError);
+            flash(R.string.connexionError);
             sendButton.setEnabled(false);
         }
     }
 
     /**
      * Initialize the spinners with the language list and set their listeners.
+     * @param languageList list of languages to load in the spinners
      */
     private void initSpinners(String languageList){
         TwicXmlParser.parseLanguagelist(languageList);
@@ -172,26 +166,85 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
         }
     }
 
+    /**
+     * Clear the spinner content.
+     * @param spinner component to clear
+     */
     private void clearSpinner(Spinner spinner) {
-//        spinner.setAdapter(null);
         spinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new String[]{""}));
     }
 
+    /**
+     * Fill a spinner with a list of string elements.
+     * @param spinner component to fill
+     * @param list list of string to load in the spinner
+     */
     private void fillSpinner(Spinner spinner, List<String> list) {
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, spinnerStyleItem, list);
         dataAdapter.setDropDownViewResource(spinnerStyleDropdown);
         spinner.setAdapter(dataAdapter);
     }
 
-    public MainActivity() {
-        Log.e("Twic","Init");
-        wifiState = WifiState.getWifiState();
-        wifiState.addObserver(this);
-    }
-
     public void hideSoftKeyboard() {
         InputMethodManager inputMethodManager = (InputMethodManager)  getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
+    @Override
+    public void update(ConnectivityState observable, Boolean isOnline) {
+        handleWifiState(isOnline);
+    }
+
+    @Override
+    public Context getContext() {
+        return getApplicationContext();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    /**
+     * Write a new text in the flashView
+     * @param msg  Message to write in the flashView
+     */
+    public static void flash(int msg){
+        if(flashView != null)
+            flashView.setText(msg);
+    }
+
+    /**
+     * Remove current text from the flashView
+     */
+    public static void cleanFlash(){
+        if(flashView != null)
+            flashView.setText("");
+    }
+
+    /**
+     * Called after a web service get the requested answer.
+     * @param response web service answer
+     */
+    @Override
+    public void updateResponse(String response) {
+        initSpinners(response);
+    }
+
+    public static void setSpinnerValue(int[] selectionPosition){
+        // Select item of src spinner
+        spinSrc.setSelection(selectionPosition[0], true);
+        spinSrc.performItemClick(spinSrc, selectionPosition[0],selectionPosition[0]);
+        positionSpinnerDst = selectionPosition[1];
+        clickUpdateSpinner = false;
+    }
+
+    public MainActivity() {
+        Log.e("Twic", "Init");
+        connectivityState = ConnectivityState.getConnectivityState();
+        connectivityState.addObserver(this);
     }
 
     /**
@@ -212,7 +265,6 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
         }
 
         Intent intent = getIntent();
-        webService = new WebService(this);
         // Set size of EditText
         setContentView(R.layout.fragment_main);
         inputField = (EditText) findViewById(R.id.editText);
@@ -271,10 +323,10 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
 
                         // Here is what you wanted:
 
-                        int offset = layout.getOffsetForHorizontal(line,  x);
+                        int offset = layout.getOffsetForHorizontal(line, x);
 
-                        if(offset>0)
-                            if(x > layout.getLineMax(0))
+                        if (offset > 0)
+                            if (x > layout.getLineMax(0))
                                 inputField.setSelection(offset);     // touch was at end of text
                             else
                                 inputField.setSelection(offset - 1);
@@ -325,9 +377,6 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
             }
         });
 
-        // Load language pairs and codeNames
-        handleWifiState(wifiState.isOnline(getContext()));
-
         // Get intent, action and MIME type
         String action = intent.getAction();
         String type = intent.getType();
@@ -336,55 +385,15 @@ public class MainActivity extends FragmentActivity implements WifiStateObserver,
             if (Intent.ACTION_SEND.equals(action) && "text/plain".equals(type)) {
                 handleSendText(intent);
             } else {
-                flashView.setText(R.string.shareError);
+                flash(R.string.shareError);
             }
     }
 
     @Override
-    public void update(WifiState observable, Boolean isOnline) {
-        handleWifiState(isOnline);
-    }
+    protected void onResume() {
+        super.onResume();
 
-    @Override
-    public Context getContext() {
-        staticContext = getApplicationContext();
-        return getApplicationContext();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    /**
-     * Write a new text in the flashView
-     * @param msg  Message to write in the flashView
-     */
-    public static void flash(int msg){
-        if(flashView != null)
-            flashView.setText(msg);
-    }
-
-    /**
-     * Remove current text from the flashView
-     */
-    public static void cleanFlash(){
-        if(flashView != null)
-            flashView.setText("");
-    }
-
-    @Override
-    public void updateResponse(String response) {
-        initSpinners(response);
-    }
-
-    public static void setSpinnerValue(int[] selectionPosition){
-        // Select item of src spinner
-        spinSrc.setSelection(selectionPosition[0], true);
-        spinSrc.performItemClick(spinSrc, selectionPosition[0],selectionPosition[0]);
-        positionSpinnerDst = selectionPosition[1];
-        clickUpdateSpinner = false;
+        // Load language pairs and codeNames
+        handleWifiState(connectivityState.isOnline(getContext()));
     }
 }

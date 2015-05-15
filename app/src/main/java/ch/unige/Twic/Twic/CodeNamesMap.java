@@ -1,5 +1,7 @@
 package ch.unige.Twic.Twic;
 
+import android.util.Log;
+
 import java.util.HashMap;
 import java.util.Map;
 

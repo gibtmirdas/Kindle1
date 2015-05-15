@@ -32,7 +32,6 @@ public class MicrosoftTab extends Fragment implements ManagableTab, WebServiceOb
         progressBar = (ProgressBar) v.findViewById(R.id.progressBarMs);
         progressBar.setVisibility(View.INVISIBLE);
         try {
-            MainActivity.cleanFlash();
             update();
         } catch (TwicException e) {
             e.printStackTrace();

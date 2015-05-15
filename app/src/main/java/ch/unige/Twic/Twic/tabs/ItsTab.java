@@ -36,7 +36,6 @@ public class ItsTab extends Fragment implements ManagableTab, WebServiceObserver
 
         // Update
         try {
-            MainActivity.cleanFlash();
             update();
         } catch (TwicException e) {
             e.printStackTrace();

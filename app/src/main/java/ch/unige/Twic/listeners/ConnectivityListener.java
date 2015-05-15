@@ -5,11 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 
 
-public class WifiListener extends BroadcastReceiver {
+public class ConnectivityListener extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        WifiState.getWifiState().updateObservers();
+        ConnectivityState.getConnectivityState().updateObservers();
     }
 
 

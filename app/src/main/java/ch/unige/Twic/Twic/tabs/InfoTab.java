@@ -16,9 +16,7 @@ public class InfoTab extends Fragment implements ManagableTab{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.info, container, false);
-        MainActivity.cleanFlash();
-        return v;
+        return inflater.inflate(R.layout.info, container, false);
     }
 
     @Override

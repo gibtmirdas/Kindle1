@@ -3,6 +3,7 @@ package ch.unige.Twic.Twic.tabs;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +13,18 @@ import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
 import ch.unige.Twic.Twic.CodeNamesMap;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
+import ch.unige.Twic.Twic.PairsList;
 import ch.unige.Twic.Twic.TranslationInfo;
 import ch.unige.Twic.Twic.TwicUrlBuilder;
 import ch.unige.Twic.Twic.TwicXmlParser;
@@ -63,10 +69,17 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
     }
 
     private String[] formatCollocations(String[] collocations) {
-        String[] fCollocations = new String[collocations.length];
-        for (int i = 0; i < collocations.length ; i++) {
-            fCollocations[i] = collocations[i].replace("|", ", ");
+        String[] fCollocations;
+
+        if (collocations != null) {
+            fCollocations = new String[collocations.length];
+            for (int i = 0; i < collocations.length; i++) {
+                fCollocations[i] = collocations[i].replace("|", ", ");
+            }
+        } else {
+            fCollocations = new String[0];
         }
+
         return fCollocations;
     }
 
@@ -125,7 +138,6 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
         listBaseForm.setOnItemClickListener(wordListsOnClickListener);
 
         try {
-            MainActivity.cleanFlash();
             update();
         } catch (TwicException e) {
             e.printStackTrace();
@@ -150,10 +162,10 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
         if(TranslationInfo.isIsInitialized()) {
             Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
 
-            TranslationInfo info = TranslationInfo.getInstance();
+            srcLang = parseData.get("sourceLanguage")[0];
+            dstLang = parseData.get("targetLanguage")[0];
 
-            srcLang = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
-            dstLang = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
+            MainActivity.setSpinnerValue(PairsList.getIndexesForPair(srcLang, dstLang));
 
             baseForm = parseData.get("baseForm");
             translation = parseData.get("translation");

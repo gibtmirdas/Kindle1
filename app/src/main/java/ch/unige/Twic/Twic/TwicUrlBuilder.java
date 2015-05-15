@@ -56,11 +56,12 @@ public class TwicUrlBuilder implements TwicFields{
         TranslationInfo info = TranslationInfo.getInstance();
         String path = ITSRL;
         if (CodeNamesMap.getCodeNameLength() > 0) {
-            String srclg = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
-            String tgtlg = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
+            String[] lg = convertAutoLgToTwicDefault(new String[]{
+                    CodeNamesMap.getCodeFromName(info.getCodeLgSrc()),
+                    CodeNamesMap.getCodeFromName(info.getCodeLgDst())});
             try {
-                path += "&srclg=" + srclg +
-                        "&tgtlg=" + tgtlg +
+                path += "&srclg=" + lg[0] +
+                        "&tgtlg=" + lg[1] +
                         "&text=" + java.net.URLEncoder.encode(info.getText(), "UTF-8");
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
