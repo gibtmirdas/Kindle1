@@ -19,6 +19,7 @@ import java.util.Map;
 
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
+import ch.unige.Twic.core.TwicFields;
 import ch.unige.Twic.exceptions.TwicException;
 import ch.unige.Twic.language.PairsList;
 import ch.unige.Twic.core.TranslationInfo;
@@ -177,8 +178,11 @@ public class TwicTab extends Fragment implements ManageableTab, WebServiceObserv
         if(TranslationInfo.isInitialized()) {
             Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
 
-            srcLang = parseData.get("sourceLanguage")[0];
-            dstLang = parseData.get("targetLanguage")[0];
+            String[] slg = parseData.get("sourceLanguage");
+            String[] dlg = parseData.get("targetLanguage");
+
+            srcLang = slg != null && slg.length > 0 ? slg[0] : TwicFields.AUTO;
+            dstLang = dlg != null && dlg.length > 0 ? dlg[0] : TwicFields.AUTO;
 
             MainActivity.setSpinnerValue(PairsList.getIndexesForPair(srcLang, dstLang));
 
