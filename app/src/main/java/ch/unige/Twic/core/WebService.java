@@ -1,4 +1,4 @@
-package ch.unige.Twic;
+package ch.unige.Twic.core;
 
 import android.os.AsyncTask;
 
@@ -31,8 +31,8 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
-import ch.unige.Twic.Twic.Exceptions.TwicException;
-import ch.unige.Twic.Twic.TwicFields;
+import ch.unige.Twic.R;
+import ch.unige.Twic.exceptions.TwicException;
 
 /**
  * Handle web service calls to the TWiC server.

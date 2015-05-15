@@ -1,8 +1,6 @@
-package ch.unige.Twic.listeners;
+package ch.unige.Twic.connectivity;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -30,9 +28,8 @@ public class ConnectivityState {
         }
         return connectivityState;
     }
-
     private ConnectivityState() {
-        observers = new ArrayList<ConnectivityStateObserver>();
+        observers = new ArrayList<>();
     }
 
     /**
@@ -50,14 +47,18 @@ public class ConnectivityState {
         }
     }
 
+    /**
+     * Determine if the device is connected to the web by any service (Wifi, mobile, ethernet,...)
+     * @param context The application context
+     * @return if the device is connected to the web
+     */
     public Boolean isOnline(Context context) {
         ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
-        Boolean isOnline = netInfo != null && (
+        return netInfo != null && (
                         netInfo.getType() == ConnectivityManager.TYPE_ETHERNET ||
                         netInfo.getType() == ConnectivityManager.TYPE_WIFI ||
                         netInfo.getType() == ConnectivityManager.TYPE_MOBILE);
-        return isOnline;
     }
 
-};
+}

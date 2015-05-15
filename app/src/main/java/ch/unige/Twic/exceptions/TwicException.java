@@ -1,4 +1,4 @@
-package ch.unige.Twic.Twic.Exceptions;
+package ch.unige.Twic.exceptions;
 
 /**
  * {@link TwicException} represent a TWiC exception raised by issues like connectivity error to the TWiC web service or bad url leading to a bad response from the TWiC web service

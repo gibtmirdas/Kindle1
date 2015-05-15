@@ -1,4 +1,4 @@
-package ch.unige.Twic.Twic.tabs;
+package ch.unige.Twic.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,17 +10,17 @@ import android.widget.TextView;
 
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
-import ch.unige.Twic.Twic.Exceptions.TwicException;
-import ch.unige.Twic.Twic.TranslationInfo;
-import ch.unige.Twic.Twic.TwicUrlBuilder;
-import ch.unige.Twic.Twic.TwicXmlParser;
-import ch.unige.Twic.WebService;
-import ch.unige.Twic.WebServiceObserver;
+import ch.unige.Twic.exceptions.TwicException;
+import ch.unige.Twic.core.TranslationInfo;
+import ch.unige.Twic.core.TwicUrlBuilder;
+import ch.unige.Twic.core.TwicXmlParser;
+import ch.unige.Twic.core.WebService;
+import ch.unige.Twic.core.WebServiceObserver;
 
 /**
  * {@code MicrosoftTab} represent the fragment of the Its tab. When the user translate a sentence, when the Its tab is focused, it asynchronously call the webservice to translate the given sentence. When the webservice reply back, the fragment is updated with the response content.
  */
-public class MicrosoftTab extends Fragment implements ManagableTab, WebServiceObserver {
+public class MicrosoftTab extends Fragment implements ManageableTab, WebServiceObserver {
 
     private TextView msReponse;
     private ProgressBar progressBar;

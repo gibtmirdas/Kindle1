@@ -1,10 +1,9 @@
-package ch.unige.Twic.Twic.tabs;
+package ch.unige.Twic.tabs;
 
 import android.support.v4.app.FragmentTabHost;
-import android.widget.TabHost;
 
 import ch.unige.Twic.MainActivity;
-import ch.unige.Twic.Twic.Exceptions.TwicException;
+import ch.unige.Twic.exceptions.TwicException;
 
 /**
  * Handle tab updates.
@@ -28,7 +27,7 @@ public class TabManager {
             try {
                 String currentTab = tabHost.getCurrentTabTag();
                 android.support.v4.app.FragmentManager fragmentManager = mainActivity.getSupportFragmentManager();
-                ManagableTab fragmentById = (ManagableTab) fragmentManager.findFragmentByTag(currentTab);
+                ManageableTab fragmentById = (ManageableTab) fragmentManager.findFragmentByTag(currentTab);
                 fragmentById.update();
             } catch (TwicException e) {
                 e.printStackTrace();

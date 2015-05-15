@@ -1,4 +1,4 @@
-package ch.unige.Twic.Twic.tabs;
+package ch.unige.Twic.tabs;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

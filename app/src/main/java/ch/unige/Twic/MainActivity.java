@@ -8,7 +8,6 @@ import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.text.Layout;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,17 +22,19 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ch.unige.Twic.Twic.PairsList;
-import ch.unige.Twic.Twic.TwicFields;
-import ch.unige.Twic.Twic.TwicXmlParser;
-import ch.unige.Twic.Twic.tabs.InfoTab;
-import ch.unige.Twic.Twic.tabs.ItsTab;
-import ch.unige.Twic.Twic.tabs.MicrosoftTab;
-import ch.unige.Twic.Twic.tabs.TabManager;
-import ch.unige.Twic.Twic.tabs.TwicTab;
-import ch.unige.Twic.listeners.SendListener;
-import ch.unige.Twic.listeners.ConnectivityState;
-import ch.unige.Twic.listeners.ConnectivityStateObserver;
+import ch.unige.Twic.core.TranslationInfo;
+import ch.unige.Twic.core.TwicFields;
+import ch.unige.Twic.core.TwicXmlParser;
+import ch.unige.Twic.core.WebService;
+import ch.unige.Twic.core.WebServiceObserver;
+import ch.unige.Twic.language.PairsList;
+import ch.unige.Twic.tabs.InfoTab;
+import ch.unige.Twic.tabs.ItsTab;
+import ch.unige.Twic.tabs.MicrosoftTab;
+import ch.unige.Twic.tabs.TabManager;
+import ch.unige.Twic.tabs.TwicTab;
+import ch.unige.Twic.connectivity.ConnectivityState;
+import ch.unige.Twic.connectivity.ConnectivityStateObserver;
 
 
 public class MainActivity extends FragmentActivity implements ConnectivityStateObserver, WebServiceObserver {
@@ -45,9 +46,6 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
     private static TextView flashView;
     private static EditText inputField;
     private static Spinner spinSrc, spinDest;
-    private static ImageButton keyboardButton;
-    private static Button prevButton, nextButton;
-    private FragmentTabHost tabHost;
 
     private ConnectivityState connectivityState;
     private final static int spinnerStyleItem = R.layout.spinner_item;
@@ -150,7 +148,7 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
 
     /**
      * Handle text shared from other applications in order to put them in the EditText.
-     * @param intent
+     * @param intent shared information
      */
     private void handleSendText(Intent intent) {
         Object extra = intent.getExtras().get(Intent.EXTRA_TEXT);
@@ -186,7 +184,7 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
 
     /**
      * Automatically called when the connectivity state changes.
-     * @param isOnline
+     * @param isOnline Indicate whatever the device is online
      */
     @Override
     public void update(Boolean isOnline) {
@@ -238,7 +236,7 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
     public static void setSpinnerValue(int[] selectionPosition){
         // Select item of src spinner
         spinSrc.setSelection(selectionPosition[0], true);
-        spinSrc.performItemClick(spinSrc, selectionPosition[0],selectionPosition[0]);
+        spinSrc.performItemClick(spinSrc, selectionPosition[0], selectionPosition[0]);
         positionSpinnerDst = selectionPosition[1];
         clickUpdateSpinner = false;
     }
@@ -274,7 +272,7 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
         flashView = (TextView) findViewById(R.id.flashView);
 
         // Init tabs
-        tabHost = (FragmentTabHost)findViewById(android.R.id.tabhost);
+        FragmentTabHost tabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
         tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 
         tabHost.addTab(tabHost.newTabSpec("twic").setIndicator("Twic"), TwicTab.class, null);
@@ -283,19 +281,31 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
         tabHost.addTab(tabHost.newTabSpec("info").setIndicator("Info"), InfoTab.class, null);
 
         // Init component listeners
-        TabManager tabManager = new TabManager(tabHost, this);
+        final TabManager tabManager = new TabManager(tabHost, this);
 
         sendButton = (Button) findViewById(R.id.buttonSend);
-        sendButton.setOnClickListener(new SendListener(this, tabManager));
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TranslationInfo.getInstance().set(
+                        inputField.getText().toString(),
+                        inputField.getSelectionStart(),
+                        spinSrc.getSelectedItem().toString(),
+                        spinDest.getSelectedItem().toString());
+                sendButton.setEnabled(false);
+                tabManager.update();
+                sendButton.setEnabled(true);
+            }
+        });
 
         spinSrc = (Spinner) findViewById(R.id.spinnerSrc);
         spinDest = (Spinner) findViewById(R.id.spinnerDst);
 
 
-        prevButton = (Button) findViewById(R.id.buttonPrev);
-        nextButton = (Button) findViewById(R.id.buttonNext);
+        Button prevButton = (Button) findViewById(R.id.buttonPrev);
+        Button nextButton = (Button) findViewById(R.id.buttonNext);
 
-        keyboardButton = (ImageButton) findViewById(R.id.buttonKeyboard);
+        ImageButton keyboardButton = (ImageButton) findViewById(R.id.buttonKeyboard);
 
         keyboardButton.setOnClickListener(new View.OnClickListener() {
             @Override

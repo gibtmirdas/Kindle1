@@ -1,4 +1,4 @@
-package ch.unige.Twic.Twic.tabs;
+package ch.unige.Twic.tabs;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -19,22 +19,28 @@ import java.util.Map;
 
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
-import ch.unige.Twic.Twic.Exceptions.TwicException;
-import ch.unige.Twic.Twic.PairsList;
-import ch.unige.Twic.Twic.TranslationInfo;
-import ch.unige.Twic.Twic.TwicUrlBuilder;
-import ch.unige.Twic.Twic.TwicXmlParser;
-import ch.unige.Twic.WebService;
-import ch.unige.Twic.WebServiceObserver;
+import ch.unige.Twic.exceptions.TwicException;
+import ch.unige.Twic.language.PairsList;
+import ch.unige.Twic.core.TranslationInfo;
+import ch.unige.Twic.core.TwicUrlBuilder;
+import ch.unige.Twic.core.TwicXmlParser;
+import ch.unige.Twic.core.WebService;
+import ch.unige.Twic.core.WebServiceObserver;
 
 /**
  * {@code TwicTab} represent the fragment of the Its tab. When the user translate a sentence, when the Its tab is focused, it asynchronously call the webservice to translate the given sentence. When the webservice reply back, the fragment is updated with the response content.
  */
-public class TwicTab extends Fragment implements ManagableTab, WebServiceObserver {
+public class TwicTab extends Fragment implements ManageableTab, WebServiceObserver {
 
     private ListView listTranslations, listCollocationSrc, listCollocationDst, listBaseForm;
     private ProgressBar progressBar;
 
+    /**
+     * Fill a {@link android.widget.ListView} with a list of words and an associated language.
+     * @param list {@link android.widget.ListView} to fill
+     * @param words Array of words to add to the list
+     * @param lang Language of the list
+     */
     private void setWordList(ListView list, String[] words, String lang) {
         ArrayList<HashMap<String, String>> listItem = new ArrayList<>();
 
