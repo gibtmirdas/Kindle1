@@ -10,8 +10,15 @@ import ch.unige.Twic.R;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
 import ch.unige.Twic.WebService;
 
+/**
+ * Build URL to query the TWiC server.
+ */
 public class TwicUrlBuilder implements TwicFields{
 
+    /**
+     * Build a TWiC url to translate the current word.
+     * @return url to query a TWiC translation.
+     */
     public static String getTwicRequestUrl(){
         TranslationInfo info = TranslationInfo.getInstance();
         TextAnalysis a = TextAnalyzer.analyse(new TextAnalysis(info.getText(), info.getPosition()));
@@ -33,6 +40,10 @@ public class TwicUrlBuilder implements TwicFields{
         return path;
     }
 
+    /**
+     * Build a Microsoft translate url to translate the current sentence.
+     * @return url to query a Microsoft translation.
+     */
     public static String getMsRequestUrl(){
         TranslationInfo info = TranslationInfo.getInstance();
         String path = MICROSOFTTRANSLATEADDRESS;
@@ -52,6 +63,10 @@ public class TwicUrlBuilder implements TwicFields{
         return path;
     }
 
+    /**
+     * Build an Its translate url to translate the current sentence.
+     * @return url to query an Its translation.
+     */
     public static String getItsRequestUrl(){
         TranslationInfo info = TranslationInfo.getInstance();
         String path = ITSRL;
@@ -70,10 +85,21 @@ public class TwicUrlBuilder implements TwicFields{
         return path;
     }
 
+    /**
+     * Build a Synt url to get the sound for a specified word and language.
+     * @param word word to synthesize
+     * @param lang language of the synthesized word
+     * @return url to query a word synthesis.
+     */
     public static String getSyntRequestUrl(String word, String lang) {
         return SYNTURL + "lg="+ lang +"&in=\"" + word + "\"";
     }
 
+    /**
+     * Query the TWiC server to retreive the current sentence languages if they're in Auto mode.
+     * @param lg translation languages (might be AUTO)
+     * @return translation languages (AUTO are converted to actual languages)
+     */
     private static String[] convertAutoLgToTwicDefault(String[] lg){
         if(!lg[0].equals(AUTO) && !lg[1].equals(AUTO))
             return lg;

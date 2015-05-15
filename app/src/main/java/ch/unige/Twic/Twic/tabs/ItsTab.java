@@ -47,7 +47,7 @@ public class ItsTab extends Fragment implements ManagableTab, WebServiceObserver
     @Override
     public void update() throws TwicException {
         progressBar.setVisibility(View.VISIBLE);
-        if(TranslationInfo.isIsInitialized()) {
+        if(TranslationInfo.isInitialized()) {
             String path = TwicUrlBuilder.getItsRequestUrl();
             (new WebService(this)).execute(path);
         }else

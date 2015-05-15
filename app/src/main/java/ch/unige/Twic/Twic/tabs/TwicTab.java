@@ -3,7 +3,6 @@ package ch.unige.Twic.Twic.tabs;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +12,11 @@ import android.widget.ListView;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
-import ch.unige.Twic.Twic.CodeNamesMap;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
 import ch.unige.Twic.Twic.PairsList;
 import ch.unige.Twic.Twic.TranslationInfo;
@@ -149,7 +143,7 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
 
     public void update() throws TwicException {
         progressBar.setVisibility(View.VISIBLE);
-        if(TranslationInfo.isIsInitialized())
+        if(TranslationInfo.isInitialized())
             (new WebService(this)).execute(TwicUrlBuilder.getTwicRequestUrl());
         else
             progressBar.setVisibility(View.INVISIBLE);
@@ -159,7 +153,7 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
     public void updateResponse(String response) {
         String srcLang, dstLang;
         String[] baseForm, translation, collocationSource, collocationTarget;
-        if(TranslationInfo.isIsInitialized()) {
+        if(TranslationInfo.isInitialized()) {
             Map<String, String[]> parseData = TwicXmlParser.parseTwicResponse(response);
 
             srcLang = parseData.get("sourceLanguage")[0];

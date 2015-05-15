@@ -103,7 +103,7 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
      * @param languageList list of languages to load in the spinners
      */
     private void initSpinners(String languageList){
-        TwicXmlParser.parseLanguagelist(languageList);
+        TwicXmlParser.parseLanguageList(languageList);
         List<String> initList = PairsList.getSrcList(true);
         clearSpinner(spinSrc);
         clearSpinner(spinDest);

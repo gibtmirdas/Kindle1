@@ -13,9 +13,16 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-
+/**
+ * Parser for TWiC server responses.
+ */
 public class TwicXmlParser implements TwicFields{
 
+    /**
+     * Parse a TWiC xml response.
+     * @param response TWiC xml response.
+     * @return Map that contains the xml fields of the response.
+     */
     public static Map<String, String[]> parseTwicResponse(String response){
         Map<String, String[]> responseMap = new HashMap<>();
         if(response == null || response.length() == 0)
@@ -28,12 +35,17 @@ public class TwicXmlParser implements TwicFields{
             Element eElement = (Element) nNode;
             for(String nodeName: FIELDS){
                 NodeList element = eElement.getElementsByTagName(nodeName);
-                responseMap.put(nodeName, getToPut(element));
+                responseMap.put(nodeName, getTextListFromNodeList(element));
             }
         }
         return responseMap;
     }
 
+    /**
+     * Parse an Its xml response.
+     * @param response Its xml response.
+     * @return Map that contains the xml fields of the response.
+     */
     public static Map<String, String[]> parseItsResponse(String response){
         Map<String, String[]> responseMap = new HashMap<>();
         if(response == null || response.length() == 0)
@@ -46,12 +58,17 @@ public class TwicXmlParser implements TwicFields{
             Element eElement = (Element) nNode;
             for(String nodeName: FIELDSITS){
                 NodeList element = eElement.getElementsByTagName(nodeName);
-                responseMap.put(nodeName, getToPut(element));
+                responseMap.put(nodeName, getTextListFromNodeList(element));
             }
         }
         return responseMap;
     }
 
+    /**
+     * Parse a Microsoft translate response.
+     * @param response Microsoft translate HTTP response.
+     * @return The translated text.
+     */
     public static String parseMsResponse(String response) {
         response = response.
                 replace("/&#39;/g", "'").
@@ -67,19 +84,22 @@ public class TwicXmlParser implements TwicFields{
         return response;
     }
 
-    public static void parseLanguagelist(String response){
+    /**
+     * Parse a TWiC language list xml response and record them in the CodeNameMap.
+     * @param response xlm language list to parse.
+     */
+    public static void parseLanguageList(String response){
         Document doc = convertXml(response);
         // set pairs
         NodeList pairs = doc.getElementsByTagName("pair");
-        String src, tgt;
-        boolean trad;
-        PairsList.add(new LanguagePair(AUTO,AUTO,true));
-        for(int i=0; i<pairs.getLength(); i++){
+
+        PairsList.add(new LanguagePair(AUTO, AUTO, true));
+        for(int i = 0; i < pairs.getLength(); i++){
             Node nNode = pairs.item(i);
             if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-                src = ((Element) nNode).getAttribute("src");
-                tgt = ((Element) nNode).getAttribute("tgt");
-                trad = ((Element) nNode).getAttribute("trad").equals("true");
+                String src = ((Element) nNode).getAttribute("src");
+                String tgt = ((Element) nNode).getAttribute("tgt");
+                boolean trad = ((Element) nNode).getAttribute("trad").equals("true");
                 if (!PairsList.containsKey(src))
                     PairsList.add(new LanguagePair(src, AUTO, true));
                 LanguagePair srcAuto = new LanguagePair(AUTO, tgt, true);
@@ -88,20 +108,24 @@ public class TwicXmlParser implements TwicFields{
                 PairsList.add(new LanguagePair(src, tgt, trad));
             }
         }
+
         // set codeNames
         NodeList codeNames = doc.getElementsByTagName("language");
-        String code, name;
-        boolean synt;
-        for(int i=0; i<codeNames.getLength(); i++){
+        for(int i = 0; i < codeNames.getLength(); i++){
             Node nNode = codeNames.item(i);
-            code = ((Element) nNode).getAttribute("code");
-            name = nNode.getTextContent();
-            synt = ((Element) nNode).getAttribute("synt").equals("true");
-            CodeNamesMap.put(code,new CodeName(code, name, synt));
+            String code = ((Element) nNode).getAttribute("code");
+            String name = nNode.getTextContent();
+            boolean synt = ((Element) nNode).getAttribute("synt").equals("true");
+            CodeNamesMap.put(code, new CodeName(code, name, synt));
         }
-        CodeNamesMap.put(AUTO, new CodeName(AUTO,AUTO,true));
+        CodeNamesMap.put(AUTO, new CodeName(AUTO, AUTO, true));
     }
 
+    /**
+     * Convert an xml response into a Document object.
+     * @param response xml response to parse.
+     * @return Resulting Document object.
+     */
     private static Document convertXml(String response){
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         Document doc = null;
@@ -115,12 +139,16 @@ public class TwicXmlParser implements TwicFields{
         return doc;
     }
 
-    private static String[] getToPut(NodeList element){
+    /**
+     * Extract the text of each nodes of the NodeList.
+     * @param element Node list to process
+     * @return Array of all text of the list.
+     */
+    private static String[] getTextListFromNodeList(NodeList element){
         if (element.getLength() == 0)
             return new String[0];
-        String[] toPut;
-        toPut = new String[element.getLength()];
-        for(int i=0; i<element.getLength(); i++)
+        String[] toPut = new String[element.getLength()];
+        for(int i = 0; i < element.getLength(); i++)
             toPut[i] = element.item(i).getTextContent();
         return toPut;
     }

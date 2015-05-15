@@ -1,7 +1,14 @@
 package ch.unige.Twic.Twic;
 
+/**
+ * Provide a way to reduce the input text size for TWiC queries.
+ * Based on TWiC Chrome extension method.
+ */
 public class TextAnalyzer {
 
+    /**
+     * Ask Yves Scherrer, he know what this thing does.
+     */
     private static TextAnalysis stripText(TextAnalysis analysis) {
         String text = analysis.getText();
         int offset = analysis.getOffset();
@@ -9,7 +16,6 @@ public class TextAnalyzer {
         String after = text.substring(offset, text.length());
 
         before = before.replaceFirst("^\\s+", "").replaceAll("\\s+", " ");
-        offset = before.length();
 
         if (before.equals(" ")) {
             offset = 0;
@@ -23,6 +29,9 @@ public class TextAnalyzer {
         return new TextAnalysis(before + after, offset);
     }
 
+    /**
+     * Ask Yves Scherrer, he know what this thing does.
+     */
     private static TextAnalysis splitText(TextAnalysis analysis) {
         if(analysis.getText().length() == 0 )
             return analysis;
@@ -72,6 +81,11 @@ public class TextAnalyzer {
     }
 
 
+    /**
+     * Try to reduce the size of the text to translate for TWiC queries.
+     * @param analysis text to analyze
+     * @return result of the text analysis.
+     */
     public static TextAnalysis analyse(TextAnalysis analysis) {
         analysis = TextAnalyzer.stripText(analysis);
         analysis = TextAnalyzer.splitText(analysis);

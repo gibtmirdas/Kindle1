@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import java.util.Map;
-
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
 import ch.unige.Twic.Twic.Exceptions.TwicException;
@@ -43,7 +41,7 @@ public class MicrosoftTab extends Fragment implements ManagableTab, WebServiceOb
     @Override
     public void update() throws TwicException {
         progressBar.setVisibility(View.VISIBLE);
-        if(TranslationInfo.isIsInitialized()) {
+        if(TranslationInfo.isInitialized()) {
             String path = TwicUrlBuilder.getMsRequestUrl();
             (new WebService(this)).execute(path, "ms");
         }else
