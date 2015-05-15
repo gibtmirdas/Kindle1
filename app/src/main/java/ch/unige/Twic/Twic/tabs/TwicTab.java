@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,9 +27,9 @@ import ch.unige.Twic.Twic.TwicXmlParser;
 import ch.unige.Twic.WebService;
 import ch.unige.Twic.WebServiceObserver;
 
-import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
-
+/**
+ * {@code TwicTab} represent the fragment of the Its tab. When the user translate a sentence, when the Its tab is focused, it asynchronously call the webservice to translate the given sentence. When the webservice reply back, the fragment is updated with the response content.
+ */
 public class TwicTab extends Fragment implements ManagableTab, WebServiceObserver {
 
     private ListView listTranslations, listCollocationSrc, listCollocationDst, listBaseForm;
@@ -62,6 +64,11 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
         list.setAdapter(mSchedule);
     }
 
+    /**
+     * Return an empty array if {@code collocations} is null, otherwise format the content to display it fancier
+     * @param collocations array of the collocations
+     * @return formated array of the collocations
+     */
     private String[] formatCollocations(String[] collocations) {
         String[] fCollocations;
 
@@ -141,6 +148,10 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
         return v;
     }
 
+    /**
+     * When the tab is created, it try to call the webservice to fill its content
+     * @throws TwicException
+     */
     public void update() throws TwicException {
         progressBar.setVisibility(View.VISIBLE);
         if(TranslationInfo.isInitialized())
@@ -149,6 +160,10 @@ public class TwicTab extends Fragment implements ManagableTab, WebServiceObserve
             progressBar.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * When the webservice reply back, it call this function to update the fragment content.
+     * @param response response of the webservice
+     */
     @Override
     public void updateResponse(String response) {
         String srcLang, dstLang;

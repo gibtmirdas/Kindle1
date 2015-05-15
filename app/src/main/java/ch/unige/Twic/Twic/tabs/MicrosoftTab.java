@@ -17,6 +17,9 @@ import ch.unige.Twic.Twic.TwicXmlParser;
 import ch.unige.Twic.WebService;
 import ch.unige.Twic.WebServiceObserver;
 
+/**
+ * {@code MicrosoftTab} represent the fragment of the Its tab. When the user translate a sentence, when the Its tab is focused, it asynchronously call the webservice to translate the given sentence. When the webservice reply back, the fragment is updated with the response content.
+ */
 public class MicrosoftTab extends Fragment implements ManagableTab, WebServiceObserver {
 
     private TextView msReponse;
@@ -38,6 +41,10 @@ public class MicrosoftTab extends Fragment implements ManagableTab, WebServiceOb
         return v;
     }
 
+    /**
+     * When the tab is created, it try to call the webservice to fill its content
+     * @throws TwicException
+     */
     @Override
     public void update() throws TwicException {
         progressBar.setVisibility(View.VISIBLE);
@@ -48,6 +55,10 @@ public class MicrosoftTab extends Fragment implements ManagableTab, WebServiceOb
             progressBar.setVisibility(View.INVISIBLE);
     }
 
+    /**
+     * When the webservice reply back, it call this function to update the fragment content.
+     * @param response response of the webservice
+     */
     public void updateResponse(String response) {
         response = TwicXmlParser.parseMsResponse(response);
         String text = "…Nothing to show…";

@@ -28,7 +28,7 @@ public class TwicUrlBuilder implements TwicFields{
         } catch (UnsupportedEncodingException ignored) { }
 
         String path = TWICURL;
-        if (CodeNamesMap.getCodeNameLength() > 0) {
+        if (!CodeNamesMap.isEmpty()) {
             String srclg = CodeNamesMap.getCodeFromName(info.getCodeLgSrc());
             String tgtlg = CodeNamesMap.getCodeFromName(info.getCodeLgDst());
             path += "&pos=" + a.getOffset() +
@@ -48,7 +48,7 @@ public class TwicUrlBuilder implements TwicFields{
         TranslationInfo info = TranslationInfo.getInstance();
         String path = MICROSOFTTRANSLATEADDRESS;
 
-        if (CodeNamesMap.getCodeNameLength() > 0) {
+        if (!CodeNamesMap.isEmpty()) {
             String[] lg = convertAutoLgToTwicDefault(new String[]{
                     CodeNamesMap.getCodeFromName(info.getCodeLgSrc()),
                     CodeNamesMap.getCodeFromName(info.getCodeLgDst())});
@@ -70,7 +70,7 @@ public class TwicUrlBuilder implements TwicFields{
     public static String getItsRequestUrl(){
         TranslationInfo info = TranslationInfo.getInstance();
         String path = ITSRL;
-        if (CodeNamesMap.getCodeNameLength() > 0) {
+        if (!CodeNamesMap.isEmpty()) {
             String[] lg = convertAutoLgToTwicDefault(new String[]{
                     CodeNamesMap.getCodeFromName(info.getCodeLgSrc()),
                     CodeNamesMap.getCodeFromName(info.getCodeLgDst())});

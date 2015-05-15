@@ -7,10 +7,8 @@ import android.widget.Spinner;
 
 import ch.unige.Twic.MainActivity;
 import ch.unige.Twic.R;
-
 import ch.unige.Twic.Twic.TranslationInfo;
 import ch.unige.Twic.Twic.TwicFields;
-
 import ch.unige.Twic.Twic.tabs.TabManager;
 
 
