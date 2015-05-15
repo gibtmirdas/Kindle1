@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Twic</string>
+    <string name="app_name">TWiC</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="sentence_default">sentence to translate</string>
-    <string name="Title">Twic on Android</string>
+    <string name="Title">TWiC on Android</string>
     <string name="viewLangSrc">From:</string>
     <string name="viewLangDst">To:</string>
     <string name="sendButton">send</string>
@@ -11,7 +11,7 @@
     <string name="wordPositionLabel">Word start position</string>
     <string name="wordPositionView">0</string>
     <string name="connexionError">Connexion error: Please enable your Wifi connexion</string>
-    <string name="serverError">Server error: Unable to reach Twic server</string>
+    <string name="serverError">Server error: Unable to reach TWiC server</string>
     <string name="shareError">Share Error: unable to process data</string>
     <string name="soundError">Sound Error: unable to play sound</string>
     <string name="buttonPrev">Previous</string>
@@ -26,7 +26,7 @@
     <string name="translationsTitle">Translations</string>
     <string name="collocationSrcTitle">Collocation source</string>
     <string name="collocationDstTitle">Collocation destination</string>
-    <string name="infoTitle">Twic Kindle Application</string>
+    <string name="infoTitle">TWiC Kindle Application</string>
     <string name="infoMainLabel">TWiC (Translation of Words in Context) is an android application that provides terminological assistance for readers of foreign language documents.\nIt interacts with the LATL server to analyze the source text and display context-dependent translations.</string>
     <string name="infoCredits">Created by:\n\tAdrien Python\n\tThomas Bertrand\nLATL, Université de Genève http://www.latl.unige.ch</string>
     <string name="infoVersion">Version: 1.0</string>
