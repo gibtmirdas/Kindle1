@@ -7,6 +7,8 @@
     <string name="serverError">Server error: Unable to reach TWiC server</string>
     <string name="shareError">Share Error: unable to process data</string>
     <string name="soundError">Sound Error: unable to play sound</string>
+    <string name="msUrlError">MS Error: unable translate sentence</string>
+    <string name="emptyTextError">Empty Text Error: please enter a sentence to translate</string>
     <string name="buttonPrev">Previous</string>
     <string name="buttonNext">Next</string>
     <string name="speakerSrc">speakerSrc</string>

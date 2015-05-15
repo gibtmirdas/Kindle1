@@ -49,10 +49,17 @@ public class MicrosoftTab extends Fragment implements ManageableTab, WebServiceO
     public void update() throws TwicException {
         progressBar.setVisibility(View.VISIBLE);
         if(TranslationInfo.isInitialized()) {
-            String path = TwicUrlBuilder.getMsRequestUrl();
-            (new WebService(this)).execute(path, "ms");
-        }else
-            progressBar.setVisibility(View.INVISIBLE);
+            if (!TranslationInfo.getInstance().getText().equals("")) {
+                String path = TwicUrlBuilder.getMsRequestUrl();
+                if (path == null)
+                    MainActivity.flash(R.string.msUrlError);
+                else
+                    (new WebService(this)).execute(path, "ms");
+            } else {
+                MainActivity.flash(R.string.emptyTextError);
+            }
+        }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     /**
@@ -61,7 +68,7 @@ public class MicrosoftTab extends Fragment implements ManageableTab, WebServiceO
      */
     public void updateResponse(String response) {
         response = TwicXmlParser.parseMsResponse(response);
-        String text = "…Nothing to show…";
+        String text = "… Nothing to show …";
         if(response.length() > 0)
             text = response;
         msReponse.setText(text);

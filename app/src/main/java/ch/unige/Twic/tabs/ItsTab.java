@@ -55,10 +55,14 @@ public class ItsTab extends Fragment implements ManageableTab, WebServiceObserve
     public void update() throws TwicException {
         progressBar.setVisibility(View.VISIBLE);
         if(TranslationInfo.isInitialized()) {
-            String path = TwicUrlBuilder.getItsRequestUrl();
-            (new WebService(this)).execute(path);
-        }else
-            progressBar.setVisibility(View.INVISIBLE);
+            if (!TranslationInfo.getInstance().getText().equals("")) {
+                String path = TwicUrlBuilder.getItsRequestUrl();
+                (new WebService(this)).execute(path);
+            } else {
+                MainActivity.flash(R.string.emptyTextError);
+            }
+        }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     /**

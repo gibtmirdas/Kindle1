@@ -50,6 +50,9 @@ public class TwicUrlBuilder implements TwicFields{
             String[] lg = convertAutoLgToTwicDefault(new String[]{
                     CodeNamesMap.getCodeFromName(info.getCodeLgSrc()),
                     CodeNamesMap.getCodeFromName(info.getCodeLgDst())});
+
+
+
             try {
                 path += "from=" + lg[0] +
                         "&to=" + lg[1] +
@@ -72,6 +75,10 @@ public class TwicUrlBuilder implements TwicFields{
             String[] lg = convertAutoLgToTwicDefault(new String[]{
                     CodeNamesMap.getCodeFromName(info.getCodeLgSrc()),
                     CodeNamesMap.getCodeFromName(info.getCodeLgDst())});
+
+            if (lg[0].equals(TwicFields.AUTO) || lg[1].equals(TwicFields.AUTO) )
+                return null;
+
             try {
                 path += "&srclg=" + lg[0] +
                         "&tgtlg=" + lg[1] +
