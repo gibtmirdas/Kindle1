@@ -8,9 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ExpandableListAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SimpleAdapter;
+import android.widget.Space;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,6 +38,30 @@ public class TwicTab extends Fragment implements ManageableTab, WebServiceObserv
 
     private ListView listTranslations, listCollocationSrc, listCollocationDst, listBaseForm;
     private ProgressBar progressBar;
+
+    /**
+     * Set the size of a listView in order to display each items.
+     * @param listView ListView to resize
+     */
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            // pre-condition
+            return;
+        }
+
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
 
     /**
      * Fill a {@link android.widget.ListView} with a list of words and an associated language.
@@ -68,7 +95,9 @@ public class TwicTab extends Fragment implements ManageableTab, WebServiceObserv
 
         SimpleAdapter mSchedule = new SimpleAdapter (getActivity().getBaseContext(), listItem,
                 R.layout.word_with_sound_item, new String[] {"word", "img"}, new int[] {R.id.word, R.id.speaker});
+
         list.setAdapter(mSchedule);
+        setListViewHeightBasedOnChildren(list);
     }
 
     /**

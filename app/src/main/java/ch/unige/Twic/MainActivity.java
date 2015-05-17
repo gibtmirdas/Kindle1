@@ -88,7 +88,6 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
         if(isOnline) {
             cleanFlash();
             new WebService(this).execute(TwicFields.LANGUAGELISTURL);
-            sendButton.setEnabled(true);
         } else {
             flash(R.string.connexionError);
             sendButton.setEnabled(false);
@@ -227,6 +226,7 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
     @Override
     public void updateResponse(String response) {
         initSpinners(response);
+        sendButton.setEnabled(true);
     }
 
     /**

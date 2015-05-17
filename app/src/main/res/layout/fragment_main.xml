@@ -13,7 +13,6 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Hello"
             android:textColor="#ffff0017"
             android:id="@+id/flashView"/>
 
@@ -154,8 +153,7 @@
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@android:id/tabhost"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_span="4">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:orientation="vertical"
@@ -182,9 +180,7 @@
                     <FrameLayout
                         android:id="@+id/realtabcontent"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        >
+                        android:layout_height="0dp">
                     </FrameLayout>
                 </ScrollView>
             </LinearLayout>
