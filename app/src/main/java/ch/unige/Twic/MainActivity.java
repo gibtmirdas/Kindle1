@@ -284,6 +284,7 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
         final TabManager tabManager = new TabManager(tabHost, this);
 
         sendButton = (Button) findViewById(R.id.buttonSend);
+        sendButton.setEnabled(false);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -330,13 +331,11 @@ public class MainActivity extends FragmentActivity implements ConnectivityStateO
                         float y = event.getY() + inputField.getScrollY();
                         int line = layout.getLineForVertical((int) y);
 
-                        // Here is what you wanted:
-
                         int offset = layout.getOffsetForHorizontal(line, x);
 
                         if (offset > 0)
                             if (x > layout.getLineMax(0))
-                                inputField.setSelection(offset);     // touch was at end of text
+                                inputField.setSelection(offset);
                             else
                                 inputField.setSelection(offset - 1);
 

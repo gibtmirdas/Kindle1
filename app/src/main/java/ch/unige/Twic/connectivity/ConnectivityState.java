@@ -55,10 +55,7 @@ public class ConnectivityState {
     public Boolean isOnline(Context context) {
         ConnectivityManager conMan = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = conMan.getActiveNetworkInfo();
-        return netInfo != null && (
-                        netInfo.getType() == ConnectivityManager.TYPE_ETHERNET ||
-                        netInfo.getType() == ConnectivityManager.TYPE_WIFI ||
-                        netInfo.getType() == ConnectivityManager.TYPE_MOBILE);
+        return netInfo != null && netInfo.getState().equals(NetworkInfo.State.CONNECTED);
     }
 
 }
